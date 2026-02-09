@@ -1,0 +1,35 @@
+﻿@page "/"
+@inject PMD.SaveEditor.Web.Services.SaveFileService SaveService
+@inject NavigationManager NavManager
+
+<PageTitle>PMD Save Editor</PageTitle>
+
+<h1>PMD Save Editor</h1>
+
+<p>Welcome to the web-based Pokémon Mystery Dungeon Save Editor.</p>
+
+<FileUploader />
+
+@if (SaveService.CurrentRBSave != null || SaveService.CurrentSkySave != null)
+{
+    <div class="alert alert-success mt-3">
+        Save file loaded! <button class="btn btn-link" @onclick="GoToEditor">Go to Editor</button>
+    </div>
+}
+
+@code {
+    protected override void OnInitialized()
+    {
+        SaveService.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        SaveService.OnChange -= StateHasChanged;
+    }
+
+    private void GoToEditor()
+    {
+        NavManager.NavigateTo("editor");
+    }
+}

@@ -1,0 +1,87 @@
+@page "/editor"
+@using PMD.SaveEditor.Web.Services
+@inject SaveFileService SaveService
+@inject IJSRuntime JS
+@implements IDisposable
+
+<h3>Save Editor - @SaveService.FileName</h3>
+
+@if (SaveService.CurrentRBSave != null)
+{
+    <div class="card mb-3">
+        <div class="card-header">General Info (Rescue Team)</div>
+        <div class="card-body">
+            <div class="mb-3">
+                <label class="form-label">Team Name</label>
+                <input type="text" class="form-control" @bind="SaveService.CurrentRBSave.TeamName" maxlength="10" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Held Money</label>
+                <input type="number" class="form-control" @bind="SaveService.CurrentRBSave.HeldMoney" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Stored Money</label>
+                <input type="number" class="form-control" @bind="SaveService.CurrentRBSave.StoredMoney" />
+            </div>
+             <div class="mb-3">
+                <label class="form-label">Rescue Points</label>
+                <input type="number" class="form-control" @bind="SaveService.CurrentRBSave.RescueTeamPoints" />
+            </div>
+        </div>
+    </div>
+
+    <button class="btn btn-primary" @onclick="DownloadSave">Download Save</button>
+}
+else if (SaveService.CurrentSkySave != null)
+{
+    <div class="card mb-3">
+        <div class="card-header">General Info (Explorers of Sky)</div>
+        <div class="card-body">
+            <div class="mb-3">
+                <label class="form-label">Team Name</label>
+                <input type="text" class="form-control" @bind="SaveService.CurrentSkySave.TeamName" maxlength="10" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Held Money</label>
+                <input type="number" class="form-control" @bind="SaveService.CurrentSkySave.HeldMoney" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Stored Money</label>
+                <input type="number" class="form-control" @bind="SaveService.CurrentSkySave.StoredMoney" />
+            </div>
+             <div class="mb-3">
+                <label class="form-label">Explorer Points</label>
+                <input type="number" class="form-control" @bind="SaveService.CurrentSkySave.ExplorerRankPoints" />
+            </div>
+        </div>
+    </div>
+
+    <button class="btn btn-primary" @onclick="DownloadSave">Download Save</button>
+}
+else
+{
+    <p>No save file loaded.</p>
+}
+
+@code {
+    protected override void OnInitialized()
+    {
+        SaveService.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        SaveService.OnChange -= StateHasChanged;
+    }
+
+    private async Task DownloadSave()
+    {
+        var data = SaveService.DownloadSaveFile();
+        if (data != null)
+        {
+            using var stream = new MemoryStream(data);
+            using var streamRef = new DotNetStreamReference(stream);
+            await JS.InvokeVoidAsync("window.downloadFileFromStream", SaveService.FileName, streamRef);
+        }
+    }
+}

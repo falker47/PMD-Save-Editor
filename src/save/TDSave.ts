@@ -1,0 +1,238 @@
+
+import { BitBlock } from '../utils/BitBlock';
+import { CharacterEncoding } from '../utils/CharacterEncoding';
+import { TDHeldItem } from './TDItem';
+import { TDActivePokemon, TDStoredPokemon } from './TDPokemon';
+import { SaveFile, GenericItem } from './SaveFile';
+
+export class TDOffsets {
+    // Checksums
+    get ChecksumEnd(): number { return 0xDC7B; }
+    get BackupSaveStart(): number { return 0x10000; }
+    get QuicksaveStart(): number { return 0x2E000; }
+    get QuicksaveChecksumStart(): number { return 0x2E004; }
+    get QuicksaveChecksumEnd(): number { return 0x2E0FF; }
+
+    // General
+    get TeamNameStart(): number { return 0x96F7 * 8; }
+    get TeamNameLength(): number { return 10; }
+
+    // Held Items
+    get HeldItemOffset(): number { return 0x8B71 * 8; }
+    get HeldItemCount(): number { return 48; }
+    get HeldItemLength(): number { return 31; }
+
+    // Stored Pokemon
+    get StoredPokemonOffset(): number { return 0x460 * 8 + 3; }
+    get StoredPokemonLength(): number { return 388; }
+    get StoredPokemonCount(): number { return 550; }
+
+    // Active Pokemon
+    get ActivePokemonOffset(): number { return 0x83CB * 8; }
+    get ActivePokemonLength(): number { return 544; }
+    get ActivePokemonCount(): number { return 4; }
+}
+
+export class TDSave implements SaveFile {
+    public gameType: 'TimeDarkness' = 'TimeDarkness';
+    public bits: BitBlock;
+    public offsets: TDOffsets;
+
+    // Checksums
+    public primaryChecksum: number = 0;
+    public secondaryChecksum: number = 0;
+    public quicksaveChecksum: number = 0;
+
+    // General
+    public teamName: string = "";
+
+    // List implementations
+    public heldItems: TDHeldItem[] = [];
+    public storedPokemon: TDStoredPokemon[] = [];
+    public activePokemon: TDActivePokemon[] = [];
+    public storedItems: GenericItem[] = []; // Not implemented in TD yet, return empty
+
+    constructor(data: Uint8Array) {
+        this.bits = new BitBlock(data);
+        this.offsets = new TDOffsets();
+        this.init();
+    }
+
+    private init(): void {
+        this.primaryChecksum = this.bits.getUInt(0, 0, 32);
+        this.secondaryChecksum = this.bits.getUInt(this.offsets.BackupSaveStart, 0, 32);
+        this.quicksaveChecksum = this.bits.getUInt(this.offsets.QuicksaveStart, 0, 32);
+
+        // Validate checksums to determine which save to load?
+        // Legacy logic: if primary invalid && secondary valid, use backup.
+        let baseOffset = 0;
+        if (!this.isPrimaryChecksumValid() && this.isSecondaryChecksumValid()) {
+            baseOffset = this.offsets.BackupSaveStart;
+        }
+
+        this.loadGeneral(baseOffset);
+        this.loadItems(baseOffset);
+        this.loadStoredPokemon(baseOffset);
+        this.loadActivePokemon(baseOffset);
+    }
+
+    private loadGeneral(baseOffset: number): void {
+        const nameBits = this.bits.getRange(baseOffset * 8 + this.offsets.TeamNameStart, this.offsets.TeamNameLength * 8);
+        const nameBytes = nameBits.toByteArray();
+        this.teamName = CharacterEncoding.decode(nameBytes);
+    }
+
+    private loadItems(baseOffset: number): void {
+        this.heldItems = [];
+        for (let i = 0; i < this.offsets.HeldItemCount; i++) {
+            const itemBits = this.bits.getRange(
+                baseOffset * 8 + this.offsets.HeldItemOffset + (i * this.offsets.HeldItemLength),
+                this.offsets.HeldItemLength
+            );
+            const item = new TDHeldItem(itemBits);
+            if (item.isValid) {
+                this.heldItems.push(item);
+            } else {
+                break;
+            }
+        }
+    }
+
+    private loadStoredPokemon(baseOffset: number): void {
+        this.storedPokemon = [];
+        for (let i = 0; i < this.offsets.StoredPokemonCount; i++) {
+            const pkmBits = this.bits.getRange(
+                baseOffset * 8 + this.offsets.StoredPokemonOffset + i * this.offsets.StoredPokemonLength,
+                this.offsets.StoredPokemonLength
+            );
+            const pkm = new TDStoredPokemon(pkmBits);
+            if (pkm.isValid) {
+                this.storedPokemon.push(pkm);
+            } else {
+                break; // Break on first invalid/empty pokemon? Legacy does `break`.
+            }
+        }
+    }
+
+    private loadActivePokemon(baseOffset: number): void {
+        this.activePokemon = [];
+        for (let i = 0; i < this.offsets.ActivePokemonCount; i++) {
+            const pkmBits = this.bits.getRange(
+                baseOffset * 8 + this.offsets.ActivePokemonOffset + i * this.offsets.ActivePokemonLength,
+                this.offsets.ActivePokemonLength
+            );
+            const pkm = new TDActivePokemon(pkmBits);
+            if (pkm.isValid) {
+                this.activePokemon.push(pkm);
+            }
+        }
+    }
+
+    public toByteArray(): Uint8Array {
+        this.saveGeneral(0);
+        this.saveItems(0);
+        this.saveStoredPokemon(0);
+        this.saveActivePokemon(0);
+
+        // Copy primary save to backup save
+        // Legacy copy: BackupSaveStart + 4, length: BackupSaveStart - 4
+        // Corrected logic: Use BITS. BackupSaveStart is BYTES.
+        const backupStartBit = this.offsets.BackupSaveStart * 8;
+        const copyLength = backupStartBit - 4; // Copy 4 bits to BackupStart*8
+        // Wait, SkySave copy logic:
+        // const copyLength = backupStartBit - 4;
+        // const sourceData = this.bits.getRange(4, copyLength);
+        // this.bits.setRange(backupStartBit + 4, copyLength, sourceData);
+        // This preserves bits 0-3 of the backup area (checksum part).
+
+        const sourceData = this.bits.getRange(4, copyLength);
+        this.bits.setRange(backupStartBit + 4, copyLength, sourceData);
+
+        // Checksums
+        this.primaryChecksum = this.calculatePrimaryChecksum();
+        this.bits.setUInt(0, 0, 32, this.primaryChecksum);
+
+        this.secondaryChecksum = this.calculateSecondaryChecksum();
+        this.bits.setUInt(this.offsets.BackupSaveStart, 0, 32, this.secondaryChecksum);
+
+        this.quicksaveChecksum = this.calculateQuicksaveChecksum(); // Calculate what's currently there
+        this.bits.setUInt(this.offsets.QuicksaveStart, 0, 32, this.quicksaveChecksum);
+
+        return this.bits.toByteArray();
+    }
+
+    private saveGeneral(baseOffset: number): void {
+        const nameBytes = CharacterEncoding.encode(this.teamName, this.offsets.TeamNameLength);
+        const nameBlock = new BitBlock(nameBytes);
+        this.bits.setRange(baseOffset * 8 + this.offsets.TeamNameStart, this.offsets.TeamNameLength * 8, nameBlock);
+    }
+
+    private saveItems(baseOffset: number): void {
+        for (let i = 0; i < this.offsets.HeldItemCount; i++) {
+            const itemOffset = baseOffset * 8 + this.offsets.HeldItemOffset + (i * this.offsets.HeldItemLength);
+            if (i < this.heldItems.length) {
+                this.bits.setRange(itemOffset, this.offsets.HeldItemLength, this.heldItems[i].toBitBlock());
+            } else {
+                const empty = new TDHeldItem();
+                empty.isValid = false;
+                this.bits.setRange(itemOffset, this.offsets.HeldItemLength, empty.toBitBlock());
+            }
+        }
+    }
+
+    private saveStoredPokemon(baseOffset: number): void {
+        for (let i = 0; i < this.offsets.StoredPokemonCount; i++) {
+            const pkmOffset = baseOffset * 8 + this.offsets.StoredPokemonOffset + i * this.offsets.StoredPokemonLength;
+            if (i < this.storedPokemon.length) {
+                this.bits.setRange(pkmOffset, this.offsets.StoredPokemonLength, this.storedPokemon[i].toBitBlock());
+            } else {
+                const empty = new TDStoredPokemon();
+                empty.isValid = false;
+                // Empty TDStoredPokemon has bit 0 as true in constructor, but here we want invalid?
+                // Legacy: `new BitBlock(Offsets.StoredPokemonLength)` which is all 0s.
+                // TDStoredPokemon ctor sets bit 0 to true.
+                // We should write strict 0s.
+                this.bits.setRange(pkmOffset, this.offsets.StoredPokemonLength, new BitBlock(this.offsets.StoredPokemonLength));
+            }
+        }
+    }
+
+    private saveActivePokemon(baseOffset: number): void {
+        for (let i = 0; i < this.offsets.ActivePokemonCount; i++) {
+            const pkmOffset = baseOffset * 8 + this.offsets.ActivePokemonOffset + i * this.offsets.ActivePokemonLength;
+            if (i < this.activePokemon.length) {
+                this.bits.setRange(pkmOffset, this.offsets.ActivePokemonLength, this.activePokemon[i].toBitBlock());
+            } else {
+                this.bits.setRange(pkmOffset, this.offsets.ActivePokemonLength, new BitBlock(this.offsets.ActivePokemonLength));
+            }
+        }
+    }
+
+    public calculatePrimaryChecksum(): number {
+        return this.calculate32BitChecksum(this.bits, 4, this.offsets.ChecksumEnd);
+    }
+
+    public calculateSecondaryChecksum(): number {
+        return this.calculate32BitChecksum(this.bits, this.offsets.BackupSaveStart + 4, this.offsets.BackupSaveStart + this.offsets.ChecksumEnd);
+    }
+
+    public calculateQuicksaveChecksum(): number {
+        return this.calculate32BitChecksum(this.bits, this.offsets.QuicksaveChecksumStart, this.offsets.QuicksaveChecksumEnd);
+    }
+
+    private calculate32BitChecksum(bits: BitBlock, startIndex: number, endIndex: number): number {
+        let sum = 0;
+        for (let i = startIndex; i <= endIndex; i += 4) {
+            sum += bits.getUInt(0, i * 8, 32);
+        }
+        return sum >>> 0;
+    }
+
+    public isPrimaryChecksumValid(): boolean {
+        return this.primaryChecksum === this.calculatePrimaryChecksum();
+    }
+
+    public isSecondaryChecksumValid(): boolean {
+        return this.secondaryChecksum === this.calculateSecondaryChecksum();
+    }
+}

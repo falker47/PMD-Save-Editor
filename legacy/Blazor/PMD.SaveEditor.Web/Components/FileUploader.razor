@@ -1,0 +1,28 @@
+@using PMD.SaveEditor.Web.Services
+@inject SaveFileService SaveService
+
+<div class="mb-3">
+    <label for="formFile" class="form-label">Upload Save File (.sav)</label>
+    <InputFile OnChange="@LoadFiles" class="form-control" id="formFile" accept=".sav" />
+    @if (!string.IsNullOrEmpty(ErrorMessage))
+    {
+        <div class="alert alert-danger mt-2">@ErrorMessage</div>
+    }
+</div>
+
+@code {
+    private string ErrorMessage;
+
+    private async Task LoadFiles(InputFileChangeEventArgs e)
+    {
+        ErrorMessage = null;
+        try
+        {
+            await SaveService.LoadSaveFile(e.File);
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+        }
+    }
+}

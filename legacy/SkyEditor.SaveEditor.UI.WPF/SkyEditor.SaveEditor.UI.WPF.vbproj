@@ -1,0 +1,391 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A013609F-7E04-4F1A-AC09-8D6885539086}</ProjectGuid>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{F184B08F-C81C-45F6-A57F-5ABD9991F28F}</ProjectTypeGuids>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>SkyEditor.SaveEditor.UI.WPF</RootNamespace>
+    <AssemblyName>SkyEditor.SaveEditor.UI.WPF</AssemblyName>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <MyType>Custom</MyType>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <IncrementalBuild>true</IncrementalBuild>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DocumentationFile>SkyEditor.SaveEditor.UI.WPF.xml</DocumentationFile>
+    <NoWarn>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036,42314</NoWarn>
+    <RemoveIntegerChecks>true</RemoveIntegerChecks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <IncrementalBuild>false</IncrementalBuild>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DocumentationFile>SkyEditor.SaveEditor.UI.WPF.xml</DocumentationFile>
+    <NoWarn>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036,42314</NoWarn>
+    <RemoveIntegerChecks>true</RemoveIntegerChecks>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionExplicit>On</OptionExplicit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionCompare>Binary</OptionCompare>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionStrict>Off</OptionStrict>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionInfer>On</OptionInfer>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="SkyEditor.Core, Version=4.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SkyEditor.Core.4.2.10\lib\net462\SkyEditor.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="SkyEditor.IO, Version=5.0.8.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SkyEditor.IO.5.0.8\lib\net462\SkyEditor.IO.dll</HintPath>
+    </Reference>
+    <Reference Include="SkyEditor.UI.WPF, Version=0.0.0.160, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SkyEditor.UI.WPF.4.2.4\lib\net462\SkyEditor.UI.WPF.dll</HintPath>
+    </Reference>
+    <Reference Include="SkyEditor.Utilities.AsyncFor, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SkyEditor.Utilities.AsyncFor.5.0.0\lib\netstandard2.0\SkyEditor.Utilities.AsyncFor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="Xceed.Wpf.AvalonDock, Version=3.4.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.4.0\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Aero, Version=3.4.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.4.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Aero.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Metro, Version=3.4.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.4.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Metro.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2010, Version=3.4.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.4.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.VS2010.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.DataGrid, Version=3.4.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.4.0\lib\net40\Xceed.Wpf.DataGrid.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.Toolkit, Version=3.4.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.4.0\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="Application.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="Application.xaml.vb">
+      <DependentUpon>Application.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MenuActions\ExportPokemon.vb" />
+    <Compile Include="MenuActions\ExportActivePokemon.vb" />
+    <Compile Include="MenuActions\ImportActivePokemon.vb" />
+    <Compile Include="MenuActions\ImportPokemon.vb" />
+    <Compile Include="MysteryDungeon\Explorers\ActivePokemonRemoveEventArgs.vb" />
+    <Compile Include="MysteryDungeon\Explorers\ViewModels\ExplorersItemViewModel.vb" />
+    <Compile Include="MysteryDungeon\Explorers\ViewModels\SkyQuicksaveViewModel.vb" />
+    <Compile Include="MysteryDungeon\Explorers\ViewModels\SkySpEpisodePartyViewModel.vb" />
+    <Compile Include="MysteryDungeon\Explorers\Views\ExplorersActivePokemonGeneralTab.xaml.vb">
+      <DependentUpon>ExplorersActivePokemonGeneralTab.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MysteryDungeon\Explorers\ViewModels\MDActiveAttackViewModel.vb" />
+    <Compile Include="MysteryDungeon\Explorers\ViewModels\ExplorersActivePokemonGeneralViewModel.vb" />
+    <Compile Include="MysteryDungeon\Explorers\ViewModels\ExplorersPokemonMovesViewModel.vb" />
+    <Compile Include="MysteryDungeon\Explorers\ViewModels\ExplorersStoredPokemonGeneralViewModel.vb" />
+    <Compile Include="MysteryDungeon\Explorers\ViewModels\SkyGeneralViewModel.vb" />
+    <Compile Include="MysteryDungeon\Explorers\ViewModels\SkyHistoryViewModel.vb" />
+    <Compile Include="MysteryDungeon\Explorers\ViewModels\ExplorersPartyViewModel.vb" />
+    <Compile Include="MysteryDungeon\Explorers\ViewModels\TDGeneralViewModel.vb" />
+    <Compile Include="MysteryDungeon\Explorers\ViewModels\TDStoredPokemonViewModel.vb" />
+    <Compile Include="MysteryDungeon\Explorers\ViewModels\SkyStoredPokemonViewModel.vb" />
+    <Compile Include="MysteryDungeon\Explorers\ViewModels\TDInventoryViewModel.vb" />
+    <Compile Include="MysteryDungeon\Explorers\Views\ExplorersItemEditView.xaml.vb">
+      <DependentUpon>ExplorersItemEditView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MysteryDungeon\Explorers\Views\ExplorersItemView.xaml.vb">
+      <DependentUpon>ExplorersItemView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MysteryDungeon\MDAttackViewModel.vb" />
+    <Compile Include="MysteryDungeon\Rescue\RBStoredItemEditView.xaml.vb">
+      <DependentUpon>RBStoredItemEditView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MysteryDungeon\Rescue\RBStoredItemView.xaml.vb">
+      <DependentUpon>RBStoredItemView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MysteryDungeon\Rescue\ViewModels\RBHeldItemViewModel.vb" />
+    <Compile Include="MysteryDungeon\Rescue\ViewModels\RBPokemonMovesViewModel.vb" />
+    <Compile Include="MysteryDungeon\Rescue\ViewModels\RBInventoryViewModel.vb" />
+    <Compile Include="MysteryDungeon\Explorers\ViewModels\SkyInventoryViewModel.vb" />
+    <Compile Include="MysteryDungeon\Rescue\ViewModels\RBPokemonStorageViewModel.vb" />
+    <Compile Include="MysteryDungeon\Rescue\ViewModels\RBStoredItemSlot.vb" />
+    <Compile Include="MysteryDungeon\Rescue\ViewModels\RBStoredItemViewModel.vb" />
+    <Compile Include="MysteryDungeon\Rescue\ViewModels\RBStoredPokemonGeneralViewModel.vb" />
+    <Compile Include="ViewModelComponents\BasicPokemonBox.vb" />
+    <Compile Include="ViewModelComponents\I4Moves.vb" />
+    <Compile Include="ViewModelComponents\IInventory.vb" />
+    <Compile Include="ViewModelComponents\IItemSlot.vb" />
+    <Compile Include="ViewModelComponents\IParty.vb" />
+    <Compile Include="ViewModelComponents\IPokemonBox.vb" />
+    <Compile Include="ViewModelComponents\IPokemonStorage.vb" />
+    <Compile Include="ViewModelComponents\ItemSlot.vb" />
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="System.Threading.Tasks" />
+    <Import Include="System.Linq" />
+    <Import Include="System.Xml.Linq" />
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Windows" />
+    <Import Include="System.Windows.Controls" />
+    <Import Include="System.Windows.Data" />
+    <Import Include="System.Windows.Documents" />
+    <Import Include="System.Windows.Input" />
+    <Import Include="System.Windows.Shapes" />
+    <Import Include="System.Windows.Media" />
+    <Import Include="System.Windows.Media.Imaging" />
+    <Import Include="System.Windows.Navigation" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Language.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Language.resx</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\AssemblyInfo.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="My Project\MyExtensions\MyWpfExtension.vb">
+      <VBMyExtensionTemplateID>Microsoft.VisualBasic.WPF.MyExtension</VBMyExtensionTemplateID>
+      <VBMyExtensionTemplateVersion>1.0.0.0</VBMyExtensionTemplateVersion>
+    </Compile>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Language.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Language.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+    </EmbeddedResource>
+    <None Include="info.skyext">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+    <AppDesigner Include="My Project\" />
+    <None Include="packages.config" />
+    <None Include="SkyEditor.SaveEditor.UI.WPF.nuspec" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="MysteryDungeon\Explorers\Views\ExplorersActiveAttackView.xaml.vb">
+      <DependentUpon>ExplorersActiveAttackView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="InventoryTab.xaml.vb">
+      <DependentUpon>InventoryTab.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="IPartyView.xaml.vb">
+      <DependentUpon>IPartyView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PokemonStorageView.xaml.vb">
+      <DependentUpon>PokemonStorageView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ItemSlotView.xaml.vb">
+      <DependentUpon>ItemSlotView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MenuActions\ImportSdf.vb" />
+    <Compile Include="MenuActions\OpenSdfSave.vb" />
+    <Compile Include="MysteryDungeon\Explorers\Views\ExplorersStoredPokemonGeneralTab.xaml.vb">
+      <DependentUpon>ExplorersStoredPokemonGeneralTab.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="I4MovesTab.xaml.vb">
+      <DependentUpon>I4MovesTab.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MysteryDungeon\IMDAttackEditView.xaml.vb">
+      <DependentUpon>IMDAttackEditView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MysteryDungeon\Rescue\Views\RBStoredPokemonGeneralTab.xaml.vb">
+      <DependentUpon>RBStoredPokemonGeneralTab.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MysteryDungeon\Explorers\Views\SkyHistory.xaml.vb">
+      <DependentUpon>SkyHistory.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MysteryDungeon\Explorers\Views\SkyQuicksavePokemonGeneralTab.xaml.vb">
+      <DependentUpon>SkyQuicksavePokemonGeneralTab.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MysteryDungeon\Explorers\Views\SkyQuicksaveTab.xaml.vb">
+      <DependentUpon>SkyQuicksaveTab.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MysteryDungeon\Explorers\Views\TDGeneralTab.xaml.vb">
+      <DependentUpon>TDGeneralTab.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MysteryDungeon\Rescue\RBGeneral.xaml.vb">
+      <DependentUpon>RBGeneral.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MysteryDungeon\Rescue\RBHeldItemEditView.xaml.vb">
+      <DependentUpon>RBHeldItemEditView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SkyEditorInfo.vb" />
+    <Compile Include="Tabs\GIGDGeneralTab.xaml.vb">
+      <DependentUpon>GIGDGeneralTab.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MysteryDungeon\Explorers\Views\SkyGeneralTab.xaml.vb">
+      <DependentUpon>SkyGeneralTab.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="MysteryDungeon\Explorers\Views\ExplorersActiveAttackView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="InventoryTab.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="IPartyView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MysteryDungeon\Explorers\Views\ExplorersActivePokemonGeneralTab.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MysteryDungeon\Explorers\Views\ExplorersItemEditView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MysteryDungeon\Explorers\Views\ExplorersItemView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MysteryDungeon\Rescue\RBStoredItemEditView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MysteryDungeon\Rescue\RBStoredItemView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PokemonStorageView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ItemSlotView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MysteryDungeon\Explorers\Views\ExplorersStoredPokemonGeneralTab.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="I4MovesTab.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MysteryDungeon\IMDAttackEditView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MysteryDungeon\Rescue\Views\RBStoredPokemonGeneralTab.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MysteryDungeon\Explorers\Views\SkyHistory.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MysteryDungeon\Explorers\Views\SkyQuicksavePokemonGeneralTab.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MysteryDungeon\Explorers\Views\SkyQuicksaveTab.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MysteryDungeon\Explorers\Views\TDGeneralTab.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MysteryDungeon\Rescue\RBGeneral.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MysteryDungeon\Rescue\RBHeldItemEditView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Tabs\GIGDGeneralTab.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MysteryDungeon\Explorers\Views\SkyGeneralTab.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Controls\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SkyEditor.SaveEditor\SkyEditor.SaveEditor.csproj">
+      <Project>{ec69c3f0-74c2-4256-bc4b-021ecebdc769}</Project>
+      <Name>SkyEditor.SaveEditor</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+</Project>

@@ -1,0 +1,129 @@
+import React, { useState } from 'react';
+import { SaveFile, GenericItem } from '../save/SaveFile';
+import { SkySave } from '../save/SkySave';
+import { ItemSelect } from './ItemSelect';
+
+import { useTranslation } from '../hooks/useTranslation';
+
+interface ItemsTabProps {
+    save: SaveFile;
+    onUpdate: () => void;
+    language: string;
+}
+
+export const ItemsTab: React.FC<ItemsTabProps> = ({ save, onUpdate, language }) => {
+    const { t } = useTranslation(language);
+    const [view, setView] = useState<'held' | 'storage' | 'spEpisode' | 'friendRescue'>('held');
+    const isSky = save.gameType === 'Sky';
+    const skySave = isSky ? (save as SkySave) : null;
+
+    const getItems = (): GenericItem[] => {
+        switch (view) {
+            case 'storage': return save.storedItems;
+            case 'spEpisode': return skySave ? skySave.spEpisodeHeldItems : [];
+            case 'friendRescue': return skySave ? skySave.friendRescueHeldItems : [];
+            case 'held':
+            default:
+                return save.heldItems;
+        }
+    };
+
+    const currentItems = getItems();
+    const isStorage = view === 'storage';
+
+    return (
+        <div className="card">
+            <h2>{t('Items')}</h2>
+            <div className="tabs" style={{ display: 'flex', gap: '5px', marginBottom: '10px' }}>
+                <button disabled={view === 'held'} onClick={() => setView('held')}>{t('HeldItems')}</button>
+                <button disabled={view === 'storage'} onClick={() => setView('storage')}>{t('StoredItems')}</button>
+                {isSky && (
+                    <>
+                        <button disabled={view === 'spEpisode'} onClick={() => setView('spEpisode')}>Special Episode</button>
+                        <button disabled={view === 'friendRescue'} onClick={() => setView('friendRescue')}>Friend Rescue</button>
+                    </>
+                )}
+            </div>
+
+            <div style={{ maxHeight: '600px', overflowY: 'auto' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                    <thead>
+                        <tr style={{ textAlign: 'left', borderBottom: '1px solid #555' }}>
+                            <th>Slot</th>
+                            <th>Item</th>
+                            <th>Quantity/Param</th>
+                            {!isStorage && <th>Valid</th>}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {currentItems.map((item, index) => (
+                            <ItemRow
+                                key={`${view}-${index}`}
+                                index={index}
+                                item={item}
+                                onUpdate={onUpdate}
+                                isHeld={!isStorage}
+                            />
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    );
+};
+
+interface ItemRowProps {
+    index: number;
+    item: GenericItem;
+    onUpdate: () => void;
+    isHeld: boolean;
+}
+
+const ItemRow: React.FC<ItemRowProps> = ({ index, item, onUpdate, isHeld }) => {
+    // Check if it's an ExplorersItem to access stackable property?
+    // GenericItem doesn't have isStackableItem.
+    // We can cast if we know it is Sky/TD/RB structure that supports it?
+    // Or just check if parameter > 0?
+    // For now, simple implementation.
+
+    return (
+        <tr style={{ borderBottom: '1px solid #333' }}>
+            <td>{index + 1}</td>
+            <td>
+                <ItemSelect
+                    value={item.id}
+                    onChange={(val) => {
+                        item.id = val;
+                        onUpdate();
+                    }}
+                />
+            </td>
+            <td>
+                <input
+                    type="number"
+                    value={item.parameter}
+                    onChange={(e) => {
+                        item.parameter = parseInt(e.target.value) || 0;
+                        onUpdate();
+                    }}
+                    style={{ width: '80px' }}
+                />
+                <span style={{ fontSize: '0.8em', marginLeft: '5px' }}>(Qty/Param)</span>
+            </td>
+            {isHeld && (
+                <td>
+                    <input
+                        type="checkbox"
+                        checked={item.isValid}
+                        onChange={(e) => {
+                            if (isHeld) {
+                                item.isValid = e.target.checked;
+                                onUpdate();
+                            }
+                        }}
+                    />
+                </td>
+            )}
+        </tr>
+    );
+};

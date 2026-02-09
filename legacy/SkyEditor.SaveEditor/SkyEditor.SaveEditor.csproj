@@ -1,0 +1,123 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp2.2;net462</TargetFrameworks>
+    <Authors>Evan Dixon</Authors>
+    <Company>Evan Dixon</Company>
+    <Description>Save editing library for Pokemon Mystery Dungeon games.</Description>
+    <Copyright>2016-2017</Copyright>
+    <VersionPrefix>4.1.0</VersionPrefix>
+    <VersionSuffix>dev</VersionSuffix>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\en\RBBaseTypes.txt" />
+    <None Remove="Resources\en\RBFriendAreaOffsets.txt" />
+    <None Remove="Resources\en\RBItemOrder.txt" />
+    <None Remove="Resources\en\RBItems.txt" />
+    <None Remove="Resources\en\RBLocations.txt" />
+    <None Remove="Resources\en\RBMoves.txt" />
+    <None Remove="Resources\en\RBPokemon.txt" />
+    <None Remove="Resources\en\SkyFriendAreaOffsets.txt" />
+    <None Remove="Resources\en\SkyItems.txt" />
+    <None Remove="Resources\en\SkyLocations.txt" />
+    <None Remove="Resources\en\SkyMoves.txt" />
+    <None Remove="Resources\en\SkyPokemon.txt" />
+    <None Remove="Resources\en\TDFriendAreaOffsets.txt" />
+    <None Remove="Resources\en\TDItems.txt" />
+    <None Remove="Resources\en\TDLocations.txt" />
+    <None Remove="Resources\es\SkyItems.txt" />
+    <None Remove="Resources\es\SkyLocations.txt" />
+    <None Remove="Resources\es\SkyMoves.txt" />
+    <None Remove="Resources\es\SkyPokemon.txt" />
+    <None Remove="Resources\fr\SkyFriendAreaOffsets.txt" />
+    <None Remove="Resources\fr\SkyItems.txt" />
+    <None Remove="Resources\fr\SkyLocations.txt" />
+    <None Remove="Resources\fr\SkyMoves.txt" />
+    <None Remove="Resources\fr\SkyPokemon.txt" />
+    <None Remove="Resources\fr\TDFriendAreaOffsets.txt" />
+    <None Remove="Resources\it\SkyItems.txt" />
+    <None Remove="Resources\it\SkyLocations.txt" />
+    <None Remove="Resources\it\SkyMoves.txt" />
+    <None Remove="Resources\it\SkyPokemon.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SkyEditor.Core">
+      <Version>4.2.10</Version>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\de\SkyItems.txt" />
+    <EmbeddedResource Include="Resources\de\SkyLocations.txt" />
+    <EmbeddedResource Include="Resources\de\SkyMoves.txt" />
+    <EmbeddedResource Include="Resources\de\SkyPokemon.txt" />
+    <EmbeddedResource Include="Resources\en\RBBaseTypes.txt" />
+    <EmbeddedResource Include="Resources\en\RBFriendAreaOffsets.txt" />
+    <EmbeddedResource Include="Resources\en\RBItemOrder.txt" />
+    <EmbeddedResource Include="Resources\en\RBItems.txt" />
+    <EmbeddedResource Include="Resources\en\RBLocations.txt" />
+    <EmbeddedResource Include="Resources\en\RBMoves.txt" />
+    <EmbeddedResource Include="Resources\en\RBPokemon.txt" />
+    <EmbeddedResource Include="Resources\en\SkyFriendAreaOffsets.txt" />
+    <EmbeddedResource Include="Resources\en\SkyItems.txt" />
+    <EmbeddedResource Include="Resources\en\SkyLocations.txt" />
+    <EmbeddedResource Include="Resources\en\SkyMoves.txt" />
+    <EmbeddedResource Include="Resources\en\SkyPokemon.txt" />
+    <EmbeddedResource Include="Resources\en\TDFriendAreaOffsets.txt" />
+    <EmbeddedResource Include="Resources\en\TDItems.txt" />
+    <EmbeddedResource Include="Resources\en\TDLocations.txt" />
+    <EmbeddedResource Include="Resources\es\SkyItems.txt" />
+    <EmbeddedResource Include="Resources\es\SkyLocations.txt" />
+    <EmbeddedResource Include="Resources\es\SkyMoves.txt" />
+    <EmbeddedResource Include="Resources\es\SkyPokemon.txt" />
+    <EmbeddedResource Include="Resources\fr\SkyFriendAreaOffsets.txt" />
+    <EmbeddedResource Include="Resources\fr\SkyItems.txt" />
+    <EmbeddedResource Include="Resources\fr\SkyLocations.txt" />
+    <EmbeddedResource Include="Resources\fr\SkyMoves.txt" />
+    <EmbeddedResource Include="Resources\fr\SkyPokemon.txt" />
+    <EmbeddedResource Include="Resources\fr\TDFriendAreaOffsets.txt" />
+    <EmbeddedResource Include="Resources\it\SkyItems.txt" />
+    <EmbeddedResource Include="Resources\it\SkyLocations.txt" />
+    <EmbeddedResource Include="Resources\it\SkyMoves.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\it\SkyPokemon.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\ClassNames.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ClassNames.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Language.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Language.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\ClassNames.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ClassNames.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Language.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Language.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>

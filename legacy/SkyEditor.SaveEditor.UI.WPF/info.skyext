@@ -1,0 +1,9 @@
+{
+  "ExtensionTypeName": "SkyEditor.Core.Extensions.PluginExtensionType",
+  "ID": "SkyEditor.SaveEditor.UI.WPF",
+  "Name": "Save Editor (WPF)",
+  "Description": "Save editor for Pokémon Mystery Dungeon games.",
+  "Author": "evandixon",
+  "IsEnabled": true,
+  "ExtensionFiles": [ "SkyEditor.SaveEditor.UI.WPF.exe" ]
+}
