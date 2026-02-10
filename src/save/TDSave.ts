@@ -31,6 +31,11 @@ export class TDOffsets {
     get ActivePokemonOffset(): number { return 0x83CB * 8; }
     get ActivePokemonLength(): number { return 544; }
     get ActivePokemonCount(): number { return 4; }
+
+    // Money & Rank (Updated based on user scan)
+    get HeldMoney(): number { return 0x96D6 * 8 + 5; }
+    get StoredMoney(): number { return 0x96DC * 8 + 5; }
+    get ExplorerRank(): number { return 0x9722 * 8; }
 }
 
 export class TDSave implements SaveFile {
@@ -45,6 +50,9 @@ export class TDSave implements SaveFile {
 
     // General
     public teamName: string = "";
+    public heldMoney: number = 0;
+    public storedMoney: number = 0;
+    public rankPoints: number = 0;
 
     // List implementations
     public heldItems: TDHeldItem[] = [];
@@ -80,6 +88,10 @@ export class TDSave implements SaveFile {
         const nameBits = this.bits.getRange(baseOffset * 8 + this.offsets.TeamNameStart, this.offsets.TeamNameLength * 8);
         const nameBytes = nameBits.toByteArray();
         this.teamName = CharacterEncoding.decode(nameBytes);
+
+        this.heldMoney = this.bits.getInt(baseOffset, this.offsets.HeldMoney, 24);
+        this.storedMoney = this.bits.getInt(baseOffset, this.offsets.StoredMoney, 24);
+        this.rankPoints = this.bits.getInt(baseOffset, this.offsets.ExplorerRank, 32);
     }
 
     private loadItems(baseOffset: number): void {
@@ -165,6 +177,10 @@ export class TDSave implements SaveFile {
         const nameBytes = CharacterEncoding.encode(this.teamName, this.offsets.TeamNameLength);
         const nameBlock = new BitBlock(nameBytes);
         this.bits.setRange(baseOffset * 8 + this.offsets.TeamNameStart, this.offsets.TeamNameLength * 8, nameBlock);
+
+        this.bits.setInt(baseOffset, this.offsets.HeldMoney, 24, this.heldMoney);
+        this.bits.setInt(baseOffset, this.offsets.StoredMoney, 24, this.storedMoney);
+        this.bits.setInt(baseOffset, this.offsets.ExplorerRank, 32, this.rankPoints);
     }
 
     private saveItems(baseOffset: number): void {
@@ -234,5 +250,20 @@ export class TDSave implements SaveFile {
 
     public isSecondaryChecksumValid(): boolean {
         return this.secondaryChecksum === this.calculateSecondaryChecksum();
+    }
+
+    public scanForValue(value: number, bitLength: number): number[] {
+        const results: number[] = [];
+        // Scan likely range for General data (around 0x9000-0xA000 bytes)
+        // This covers the Team Name area and likely location of Money/Rank
+        const startBit = 0x9000 * 8;
+        const endBit = 0xA000 * 8; // 4KB range * 8 bits
+
+        for (let i = startBit; i < endBit; i++) {
+            if (this.bits.getInt(0, i, bitLength) === value) {
+                results.push(i);
+            }
+        }
+        return results;
     }
 }

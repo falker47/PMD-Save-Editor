@@ -34,6 +34,9 @@ export class TDStoredPokemon implements GenericPokemon {
     get nickname(): string { return this.name; }
     set nickname(val: string) { this.name = val; }
 
+    get isFemale(): boolean { return this.id.isFemale; }
+    set isFemale(val: boolean) { this.id.isFemale = val; }
+
     constructor(bits?: BitBlock) {
         if (bits) {
             // Legacy: Bit 0 prevents "SetInt" overriding it? 
@@ -136,6 +139,9 @@ export class TDActivePokemon implements GenericPokemon {
 
     get nickname(): string { return this.name; }
     set nickname(val: string) { this.name = val; }
+
+    get isFemale(): boolean { return this.id.isFemale; }
+    set isFemale(val: boolean) { this.id.isFemale = val; }
 
     get hp(): number { return this.currentHP; }
     set hp(val: number) { this.currentHP = val; }

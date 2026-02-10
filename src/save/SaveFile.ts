@@ -24,6 +24,9 @@ export interface GenericPokemon {
 
     // Moves
     moves: GenericMove[];
+
+    // Metadata
+    isFemale?: boolean;
 }
 
 export interface GenericMove {
@@ -39,6 +42,7 @@ export interface SaveFile {
     heldMoney?: number;
     storedMoney?: number;
     rescueTeamPoints?: number;
+    rankPoints?: number; // For TD/Sky explorer rank points
     baseType?: number;
 
     heldItems: GenericItem[];

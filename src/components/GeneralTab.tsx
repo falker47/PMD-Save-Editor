@@ -78,6 +78,20 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ save, onUpdate, language
                 </div>
             )}
 
+            {(save.rankPoints !== undefined) && (
+                <div className="form-group">
+                    <label>{t('RankPoints')}</label>
+                    <input
+                        type="number"
+                        value={save.rankPoints}
+                        onChange={(e) => {
+                            save.rankPoints = parseInt(e.target.value) || 0;
+                            onUpdate();
+                        }}
+                    />
+                </div>
+            )}
+
             {(save.gameType === 'RescueTeam') && (
                 <div className="form-group">
                     <label>Region (Auto-detection failed? Try switching)</label>
@@ -133,6 +147,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ save, onUpdate, language
                             }}
                         />
                     </div>
+
 
                     <div className="form-group">
                         <label>{t('OriginalPlayerGeneric')}</label>
@@ -205,7 +220,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ save, onUpdate, language
             {/* Debug Section for Rescue Team */}
             {save.gameType === 'RescueTeam' && (
                 <div className="card" style={{ marginTop: '20px', border: '1px solid #555' }}>
-                    <h3>Debug Tools</h3>
+                    <h3>Debug Tools (Rescue Team)</h3>
                     <p>Use this if Auto-Region failed.</p>
                     <div className="form-group">
                         <label>Scan for Team Name in File</label>
@@ -251,6 +266,54 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ save, onUpdate, language
                                     else alert(`Matches:\n${results.join('\n')}`);
                                 }
                             }}>Scan Items (Bit-Level)</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Debug Section for Time/Darkness */}
+            {save.gameType === 'TimeDarkness' && (
+                <div className="card" style={{ marginTop: '20px', border: '1px solid #555' }}>
+                    <h3>Debug Tools (Time/Darkness)</h3>
+                    <p>Use this to find correct offsets for Money/Rank if the current ones are wrong.</p>
+                    <div className="form-group">
+                        <label>Scan for Value (e.g. Held Money)</label>
+                        <div style={{ display: 'flex', gap: '10px' }}>
+                            <input
+                                type="number"
+                                placeholder="Value (e.g 12345)"
+                                id="scanValueInput"
+                            />
+                            <select id="scanBitLength">
+                                <option value="24">24-bit (Money)</option>
+                                <option value="32">32-bit (Rank/Adv)</option>
+                            </select>
+                            <button onClick={() => {
+                                const valStr = (document.getElementById('scanValueInput') as HTMLInputElement).value;
+                                const val = parseInt(valStr);
+                                const bitLength = parseInt((document.getElementById('scanBitLength') as HTMLSelectElement).value);
+
+                                if (isNaN(val)) {
+                                    alert("Please enter a valid number");
+                                    return;
+                                }
+
+                                // Assuming TDSave has this method now
+                                const tdSave = save as any;
+                                if (tdSave.scanForValue) {
+                                    const results: number[] = tdSave.scanForValue(val, bitLength);
+                                    if (results.length === 0) {
+                                        alert("No matches found in 0x9000-0xA000 range.");
+                                    } else {
+                                        const resultsStr = results.map(r => {
+                                            const byteOff = Math.floor(r / 8);
+                                            const bitOff = r % 8;
+                                            return `Bit: ${r} (0x${r.toString(16)}) -> Byte: 0x${byteOff.toString(16)} (Bit ${bitOff})`;
+                                        }).join('\n');
+                                        alert(`Found match(es):\n${resultsStr}`);
+                                    }
+                                }
+                            }}>Scan</button>
                         </div>
                     </div>
                 </div>

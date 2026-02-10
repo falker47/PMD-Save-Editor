@@ -239,8 +239,6 @@ interface GenericPokemonEditorProps {
 }
 
 const GenericPokemonEditor: React.FC<GenericPokemonEditorProps> = ({ pokemon, save, onUpdate, isSky, autoSync, mode }) => {
-    // Helper to cast to SkyStoredPokemon for Sky-specific fields
-    const skyPokemon = isSky ? (pokemon as any) : null;
 
     const handleUpdate = () => {
         if (isSky && autoSync && (save as SkySave).syncPokemonAttributes) {
@@ -320,15 +318,17 @@ const GenericPokemonEditor: React.FC<GenericPokemonEditorProps> = ({ pokemon, sa
                         />
                     </div>
 
-                    {isSky && skyPokemon && skyPokemon.id && (
+                    {pokemon.isFemale !== undefined && (
                         <div className="form-group">
                             <label>
                                 <input
                                     type="checkbox"
-                                    checked={skyPokemon.id.isFemale}
-                                    onChange={(e: any) => {
-                                        skyPokemon.id.isFemale = e.target.checked;
-                                        handleUpdate();
+                                    checked={pokemon.isFemale}
+                                    onChange={(e) => {
+                                        if (pokemon.isFemale !== undefined) {
+                                            pokemon.isFemale = e.target.checked;
+                                            handleUpdate();
+                                        }
                                     }}
                                 />
                                 Is Female
