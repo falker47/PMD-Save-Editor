@@ -99,11 +99,28 @@ export class RBSave implements SaveFile {
 
         // Detect EU
         const usChecksum = this.calculate32BitChecksum(this.bits, 4, 0x57D0);
+        console.log(`RBSave Checksums: File=${this.primaryChecksum.toString(16)}, CalcUS=${usChecksum.toString(16)}`);
+
         if (this.primaryChecksum === (usChecksum - 1) >>> 0) {
-            // It's EU
+            console.log("RBSave: Auto-detected EU");
             this.offsets = new RBEUOffsets();
+        } else {
+            console.log("RBSave: Auto-detected US");
         }
 
+        this.reload();
+    }
+
+    public setRegion(region: 'US' | 'EU') {
+        if (region === 'EU') {
+            this.offsets = new RBEUOffsets();
+        } else {
+            this.offsets = new RBOffsets();
+        }
+        this.reload();
+    }
+
+    private reload() {
         let baseOffset = 0;
         if (!this.isPrimaryChecksumValid() && this.isSecondaryChecksumValid()) {
             baseOffset = this.offsets.BackupSaveStart;
@@ -133,11 +150,14 @@ export class RBSave implements SaveFile {
         this.storedItems = [];
         const block = this.bits.getRange(this.offsets.StoredItemOffset, this.offsets.StoredItemCount * 10);
 
+        if (this.offsets instanceof RBEUOffsets) console.log("RBSave: EU detected");
+        else console.log("RBSave: US detected");
+
         for (let i = 0; i < this.offsets.StoredItemCount; i++) {
             const quantity = block.getInt(0, i * 10, 10);
-            if (quantity > 0) {
-                this.storedItems.push(new RBStoredItem(i + 1, quantity));
-            }
+            // Bank Logic: ID = i + 1, Value = Quantity
+            // We push ALL items so user can edit quantity from 0 to >0
+            this.storedItems.push(new RBStoredItem(i + 1, quantity));
         }
 
         // Held Items use baseOffset
@@ -149,11 +169,7 @@ export class RBSave implements SaveFile {
                 33
             );
             const item = new RBHeldItem(itemBits);
-            if (item.isValid) {
-                this.heldItems.push(item);
-            } else {
-                break;
-            }
+            this.heldItems.push(item);
         }
     }
 
@@ -183,11 +199,8 @@ export class RBSave implements SaveFile {
             // So 323 is the correct length.
 
             const pkm = new RBStoredPokemon(pkmBits);
-            if (pkm.id > 0) {
-                this.storedPokemon.push(pkm);
-            } else {
-                break;
-            }
+            this.storedPokemon.push(pkm);
+            if (i < 5) console.log(`RB Pkm ${i}: ID=${pkm.id}, Valid=${pkm.isValid}, Name=${pkm.name}`);
         }
     }
 
@@ -313,5 +326,108 @@ export class RBSave implements SaveFile {
 
     public isSecondaryChecksumValid(): boolean {
         return this.secondaryChecksum === this.calculateSecondaryChecksum();
+    }
+
+    public scanForName(name: string): number[] {
+        if (!name || name.length < 2) return [];
+        // Brute force scan for the name encoded bytes
+        // Rescue Team uses 8000+ encoding? Or standard?
+        // It uses CharacterEncoding.encode.
+        try {
+            const encoded = CharacterEncoding.encode(name, name.length);
+            const foundOffsets: number[] = [];
+
+            // Search byte by byte
+            const fileBytes = this.bits.toByteArray();
+
+            for (let i = 0; i < fileBytes.length - encoded.length; i++) {
+                let match = true;
+                for (let j = 0; j < encoded.length; j++) {
+                    if (fileBytes[i + j] !== encoded[j]) {
+                        match = false;
+                        break;
+                    }
+                }
+                if (match) {
+                    foundOffsets.push(i);
+                }
+            }
+            return foundOffsets;
+        } catch (e) {
+            console.error(e);
+            return [];
+        }
+    }
+
+    public scanForItemSequence(appxIDs: number[]): string[] {
+        const results: string[] = [];
+        const bitCount = this.bits.count;
+
+        // Find all bit offsets for each ID
+        const idBitOffsets: number[][] = [];
+
+        for (const targetId of appxIDs) {
+            const offsets: number[] = [];
+            // optimization: verify we can read 8 bits
+            for (let i = 0; i < bitCount - 8; i++) {
+                if (this.bits.getInt(0, i, 8) === targetId) {
+                    offsets.push(i);
+                }
+            }
+            idBitOffsets.push(offsets);
+        }
+
+        if (idBitOffsets.length < 2) return ["Error: Need at least 2 IDs"];
+
+        // Match sequences
+        // We look for: Offset(ID1) = Offset(ID0) + Stride
+        // Stride is likely consistent.
+        // We allow a search window for the stride: [16 bits to 48 bits]
+
+        const validStrides = new Map<number, number>(); // Stride -> Count
+
+        const startOffsets = idBitOffsets[0];
+
+        for (const start of startOffsets) {
+            // Can we find the next ID within window?
+            let currentPos = start;
+            let currentStride = 0;
+            let chainFound = true;
+
+            // Try to find the SECOND item to establish a stride
+            const nextOffsets = idBitOffsets[1];
+            // Look for offsets in range [currentPos + 16, currentPos + 48]
+            // Standard strides: 23 (packed), 33 (unpacked??), 32?
+            const candidates = nextOffsets.filter(o => (o - currentPos) >= 16 && (o - currentPos) <= 48);
+
+            for (const nextPos of candidates) {
+                const stride = nextPos - currentPos;
+
+                // Verify the rest of the chain with this stride
+                let chainValid = true;
+                let testPos = nextPos;
+
+                for (let k = 2; k < appxIDs.length; k++) {
+                    const kOffsets = idBitOffsets[k];
+                    const expectedPos = testPos + stride;
+                    if (kOffsets.includes(expectedPos)) {
+                        testPos = expectedPos;
+                    } else {
+                        chainValid = false;
+                        break;
+                    }
+                }
+
+                if (chainValid) {
+                    const byteOffset = Math.floor(start / 8);
+                    const bitRemainder = start % 8;
+                    results.push(`MATCH: Start Bit ${start} (Byte 0x${byteOffset.toString(16)} + ${bitRemainder}). Stride detected: ${stride} bits.`);
+                    if (results.length > 20) return results;
+                }
+            }
+        }
+
+        if (results.length === 0) return ["No bit-level matches found."];
+        return results;
     }
 }

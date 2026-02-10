@@ -20,6 +20,7 @@ export interface GenericPokemon {
     spDefense: number;
     exp: number;
     iq: number;
+    metAt?: number;
 
     // Moves
     moves: GenericMove[];

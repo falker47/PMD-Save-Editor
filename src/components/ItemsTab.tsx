@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { SaveFile, GenericItem } from '../save/SaveFile';
 import { SkySave } from '../save/SkySave';
 import { ItemSelect } from './ItemSelect';
+import { DataManager } from '../utils/DataManager';
 
 import { useTranslation } from '../hooks/useTranslation';
 
@@ -51,7 +52,7 @@ export const ItemsTab: React.FC<ItemsTabProps> = ({ save, onUpdate, language }) 
                         <tr style={{ textAlign: 'left', borderBottom: '1px solid #555' }}>
                             <th>Slot</th>
                             <th>Item</th>
-                            <th>Quantity/Param</th>
+                            <th>{isStorage ? 'Quantity' : 'Quantity/Param'}</th>
                             {!isStorage && <th>Valid</th>}
                         </tr>
                     </thead>
@@ -63,6 +64,7 @@ export const ItemsTab: React.FC<ItemsTabProps> = ({ save, onUpdate, language }) 
                                 item={item}
                                 onUpdate={onUpdate}
                                 isHeld={!isStorage}
+                                isStorage={isStorage}
                             />
                         ))}
                     </tbody>
@@ -77,9 +79,10 @@ interface ItemRowProps {
     item: GenericItem;
     onUpdate: () => void;
     isHeld: boolean;
+    isStorage?: boolean;
 }
 
-const ItemRow: React.FC<ItemRowProps> = ({ index, item, onUpdate, isHeld }) => {
+const ItemRow: React.FC<ItemRowProps> = ({ index, item, onUpdate, isHeld, isStorage }) => {
     // Check if it's an ExplorersItem to access stackable property?
     // GenericItem doesn't have isStackableItem.
     // We can cast if we know it is Sky/TD/RB structure that supports it?
@@ -90,13 +93,19 @@ const ItemRow: React.FC<ItemRowProps> = ({ index, item, onUpdate, isHeld }) => {
         <tr style={{ borderBottom: '1px solid #333' }}>
             <td>{index + 1}</td>
             <td>
-                <ItemSelect
-                    value={item.id}
-                    onChange={(val) => {
-                        item.id = val;
-                        onUpdate();
-                    }}
-                />
+                {isStorage ? (
+                    // For Rescue Team Storage, ID is fixed by index.
+                    // We just show the Name.
+                    <span>{DataManager.getInstance().getItemName(item.id)}</span>
+                ) : (
+                    <ItemSelect
+                        value={item.id}
+                        onChange={(val) => {
+                            item.id = val;
+                            onUpdate();
+                        }}
+                    />
+                )}
             </td>
             <td>
                 <input

@@ -356,6 +356,20 @@ const GenericPokemonEditor: React.FC<GenericPokemonEditorProps> = ({ pokemon, on
                         />
                     </div>
 
+                    {pokemon.metAt !== undefined && (
+                        <div className="form-group">
+                            <label>Met At (Location ID)</label>
+                            <input
+                                type="number"
+                                value={pokemon.metAt}
+                                onChange={(e) => {
+                                    pokemon.metAt = parseInt(e.target.value) || 0;
+                                    onUpdate();
+                                }}
+                            />
+                        </div>
+                    )}
+
                     <h3>Moves</h3>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1em' }}>
                         {pokemon.moves.map((move, idx) => (

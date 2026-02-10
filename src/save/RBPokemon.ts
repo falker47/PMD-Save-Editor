@@ -9,7 +9,14 @@ export class RBAttack implements GenericMove {
     public isLinked: boolean = false;
     public isSwitched: boolean = false;
     public isSet: boolean = false;
-    public id: number = 0;
+
+    private _id: number = 0;
+    get id(): number { return this._id; }
+    set id(val: number) {
+        this._id = val;
+        if (val > 0) this.isValid = true;
+    }
+
     public powerBoost: number = 0;
 
     constructor(bits?: BitBlock) {
@@ -18,7 +25,7 @@ export class RBAttack implements GenericMove {
             this.isLinked = bits.getBit(1);
             this.isSwitched = bits.getBit(2);
             this.isSet = bits.getBit(3);
-            this.id = bits.getInt(0, 4, 9);
+            this._id = bits.getInt(0, 4, 9);
             this.powerBoost = bits.getInt(0, 13, 7);
         }
     }
@@ -65,7 +72,13 @@ export class RBStoredPokemon implements GenericPokemon {
     // isValid is already a getter in existing code?
     // "get isValid(): boolean { return this.id > 0; }" exists at bottom.
     // I need to add setter for interface compliance.
-    set isValid(val: boolean) { if (!val) this.id = 0; }
+    set isValid(val: boolean) {
+        if (!val) {
+            this.id = 0;
+        } else if (this.id === 0) {
+            this.id = 1; // Default to Bulbasaur
+        }
+    }
 
     constructor(bits?: BitBlock) {
         if (bits) {
