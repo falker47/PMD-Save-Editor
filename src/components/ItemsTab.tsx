@@ -36,12 +36,12 @@ export const ItemsTab: React.FC<ItemsTabProps> = ({ save, onUpdate, language }) 
         <div className="card">
             <h2>{t('Items')}</h2>
             <div className="tabs" style={{ display: 'flex', gap: '5px', marginBottom: '10px' }}>
-                <button disabled={view === 'held'} onClick={() => setView('held')}>{t('HeldItems')}</button>
-                <button disabled={view === 'storage'} onClick={() => setView('storage')}>{t('StoredItems')}</button>
+                <button style={{ padding: '0.2em 0.5em', fontSize: '0.9em' }} disabled={view === 'held'} onClick={() => setView('held')}>{t('HeldItems')}</button>
+                <button style={{ padding: '0.2em 0.5em', fontSize: '0.9em' }} disabled={view === 'storage'} onClick={() => setView('storage')}>{t('StoredItems')}</button>
                 {isSky && (
                     <>
-                        <button disabled={view === 'spEpisode'} onClick={() => setView('spEpisode')}>Special Episode</button>
-                        <button disabled={view === 'friendRescue'} onClick={() => setView('friendRescue')}>Friend Rescue</button>
+                        <button style={{ padding: '0.2em 0.5em', fontSize: '0.9em' }} disabled={view === 'spEpisode'} onClick={() => setView('spEpisode')}>Special Episode</button>
+                        {/* <button style={{ padding: '0.2em 0.5em', fontSize: '0.9em' }} disabled={view === 'friendRescue'} onClick={() => setView('friendRescue')}>Friend Rescue</button> */}
                     </>
                 )}
             </div>

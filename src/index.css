@@ -71,7 +71,14 @@ h1 {
 }
 
 .form-group {
-    margin-bottom: 1em;
+    margin-bottom: 0.4em;
+}
+
+.form-group-inline {
+    display: flex;
+    gap: 0.5em;
+    align-items: flex-start;
+    flex-wrap: wrap;
 }
 
 .form-group label {
@@ -82,13 +89,19 @@ h1 {
 
 input[type="text"],
 input[type="number"],
-select {
+select,
+.searchable-select-trigger {
     width: 100%;
     padding: 0.5em;
     border: 1px solid #333;
     border-radius: 4px;
     background: #2a2a2a;
     color: white;
+    height: 2.5em;
+    box-sizing: border-box;
+    font-size: 1rem;
+    line-height: 1.5;
+    vertical-align: middle;
 }
 
 .tabs {
@@ -97,7 +110,7 @@ select {
 }
 
 .tab {
-    padding: 0.5em 1em;
+    padding: 0.4em 0.8em;
     cursor: pointer;
     background: #333;
     margin-right: 0.2em;

@@ -123,15 +123,15 @@ export const SaveEditor: React.FC = () => {
 
     return (
         <div>
-            <div className="card">
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1em', marginBottom: '1em' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '2px solid #646cff', paddingBottom: '0.5em', flexWrap: 'wrap', gap: '10px' }}>
-                        <h2 style={{ margin: 0, border: 'none', padding: 0, flex: 1, minWidth: '200px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', marginRight: '1rem' }} title={`Editing: ${fileName}`}>
+            <div className="card" style={{ padding: '0.8em', marginBottom: '0.5em' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5em', marginBottom: 0 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '2px solid #646cff', paddingBottom: '0.3em', flexWrap: 'wrap', gap: '10px' }}>
+                        <h2 style={{ margin: 0, border: 'none', padding: 0, flex: 1, minWidth: '200px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', marginRight: '1rem', fontSize: '1.5rem' }} title={`Editing: ${fileName}`}>
                             Editing: {fileName}
                         </h2>
                         <button
                             onClick={handleUnload}
-                            style={{ backgroundColor: '#d32f2f', color: 'white', whiteSpace: 'nowrap' }}
+                            style={{ backgroundColor: '#d32f2f', color: 'white', whiteSpace: 'nowrap', padding: '0.3em 0.8em' }}
                         >
                             Go Back
                         </button>
@@ -158,7 +158,7 @@ export const SaveEditor: React.FC = () => {
                             </div>
                         </div>
                         <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                            <button onClick={handleDownload} style={{ width: '100%', backgroundColor: '#2e7d32' }}>Download Sav</button>
+                            <button onClick={handleDownload} style={{ width: '100%', backgroundColor: '#2e7d32', padding: '0.3em 0.8em' }}>Download</button>
                         </div>
                     </div>
                 </div>

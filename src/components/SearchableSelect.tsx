@@ -58,14 +58,10 @@ export const SearchableSelect: React.FC<SearchableSelectProps> = ({ options, val
                     setIsOpen(!isOpen);
                     setSearchTerm(""); // Reset search on open
                 }}
+                className="searchable-select-trigger"
                 style={{
-                    padding: '5px',
-                    border: '1px solid #555',
-                    backgroundColor: '#333',
-                    color: '#fff',
                     cursor: 'pointer',
                     userSelect: 'none',
-                    minHeight: '20px',
                     whiteSpace: 'nowrap',
                     overflow: 'hidden',
                     textOverflow: 'ellipsis'
@@ -74,77 +70,79 @@ export const SearchableSelect: React.FC<SearchableSelectProps> = ({ options, val
                 {selectedOption ? `${selectedOption.name} (${selectedOption.id})` : (value === 0 ? "Nothing" : `Unknown (${value})`)}
             </div>
 
-            {isOpen && (
-                <div style={{
-                    position: 'absolute',
-                    top: '100%',
-                    left: 0,
-                    right: 0,
-                    zIndex: 1000,
-                    backgroundColor: '#333',
-                    border: '1px solid #555',
-                    maxHeight: '200px',
-                    display: 'flex',
-                    flexDirection: 'column'
-                }}>
-                    <input
-                        ref={inputRef}
-                        type="text"
-                        value={searchTerm}
-                        onChange={e => setSearchTerm(e.target.value)}
-                        placeholder={placeholder}
-                        style={{
-                            width: '100%',
-                            boxSizing: 'border-box',
-                            padding: '5px',
-                            border: 'none',
-                            borderBottom: '1px solid #555',
-                            backgroundColor: '#222',
-                            color: '#fff',
-                            outline: 'none'
-                        }}
-                    />
-                    <div style={{ overflowY: 'auto', flex: 1 }}>
-                        <div
-                            onClick={() => {
-                                onChange(0);
-                                setIsOpen(false);
-                            }}
+            {
+                isOpen && (
+                    <div style={{
+                        position: 'absolute',
+                        top: '100%',
+                        left: 0,
+                        right: 0,
+                        zIndex: 1000,
+                        backgroundColor: '#333',
+                        border: '1px solid #555',
+                        maxHeight: '200px',
+                        display: 'flex',
+                        flexDirection: 'column'
+                    }}>
+                        <input
+                            ref={inputRef}
+                            type="text"
+                            value={searchTerm}
+                            onChange={e => setSearchTerm(e.target.value)}
+                            placeholder={placeholder}
                             style={{
+                                width: '100%',
+                                boxSizing: 'border-box',
                                 padding: '5px',
-                                cursor: 'pointer',
-                                borderBottom: '1px solid #444',
-                                backgroundColor: value === 0 ? '#444' : 'transparent'
+                                border: 'none',
+                                borderBottom: '1px solid #555',
+                                backgroundColor: '#222',
+                                color: '#fff',
+                                outline: 'none'
                             }}
-                            className="searchable-option"
-                        >
-                            Nothing
+                        />
+                        <div style={{ overflowY: 'auto', flex: 1 }}>
+                            <div
+                                onClick={() => {
+                                    onChange(0);
+                                    setIsOpen(false);
+                                }}
+                                style={{
+                                    padding: '5px',
+                                    cursor: 'pointer',
+                                    borderBottom: '1px solid #444',
+                                    backgroundColor: value === 0 ? '#444' : 'transparent'
+                                }}
+                                className="searchable-option"
+                            >
+                                Nothing
+                            </div>
+                            {filteredOptions.length > 0 ? (
+                                filteredOptions.map(opt => (
+                                    <div
+                                        key={opt.id}
+                                        onClick={() => {
+                                            onChange(opt.id);
+                                            setIsOpen(false);
+                                        }}
+                                        style={{
+                                            padding: '5px',
+                                            cursor: 'pointer',
+                                            backgroundColor: value === opt.id ? '#444' : 'transparent',
+                                            borderBottom: '1px solid #444'
+                                        }}
+                                        className="searchable-option"
+                                    >
+                                        {opt.name} ({opt.id})
+                                    </div>
+                                ))
+                            ) : (
+                                <div style={{ padding: '5px', color: '#999' }}>No results</div>
+                            )}
                         </div>
-                        {filteredOptions.length > 0 ? (
-                            filteredOptions.map(opt => (
-                                <div
-                                    key={opt.id}
-                                    onClick={() => {
-                                        onChange(opt.id);
-                                        setIsOpen(false);
-                                    }}
-                                    style={{
-                                        padding: '5px',
-                                        cursor: 'pointer',
-                                        backgroundColor: value === opt.id ? '#444' : 'transparent',
-                                        borderBottom: '1px solid #444'
-                                    }}
-                                    className="searchable-option"
-                                >
-                                    {opt.name} ({opt.id})
-                                </div>
-                            ))
-                        ) : (
-                            <div style={{ padding: '5px', color: '#999' }}>No results</div>
-                        )}
                     </div>
-                </div>
-            )}
+                )
+            }
             <style>
                 {`
                 .searchable-option:hover {
@@ -152,6 +150,6 @@ export const SearchableSelect: React.FC<SearchableSelectProps> = ({ options, val
                 }
                 `}
             </style>
-        </div>
+        </div >
     );
 };

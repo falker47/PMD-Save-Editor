@@ -22,8 +22,7 @@ export const PokemonTab: React.FC<PokemonTabProps> = ({ save, onUpdate, language
     // Auto-Sync state (forced to true as requested)
     const [autoSync] = useState(true);
 
-    const [page, setPage] = useState(0);
-    const itemsPerPage = 50;
+
     const dataManager = DataManager.getInstance();
 
     const isSky = save.gameType === 'Sky';
@@ -34,7 +33,6 @@ export const PokemonTab: React.FC<PokemonTabProps> = ({ save, onUpdate, language
         setMode(newMode);
         setSelectedStored(null);
         setSelectedActive(null);
-        setPage(0);
     };
 
     const renderList = () => {
@@ -58,9 +56,6 @@ export const PokemonTab: React.FC<PokemonTabProps> = ({ save, onUpdate, language
             const filteredStored = save.storedPokemon.map((p, i) => ({ pkm: p, index: i }))
                 .filter(({ index }) => !spActiveIndices.has(index));
 
-            const paginatedPokemon = filteredStored.slice(page * itemsPerPage, (page + 1) * itemsPerPage);
-            const totalPages = Math.ceil(filteredStored.length / itemsPerPage);
-
             return (
                 <>
                     <h2>{t('StoredPokemon')} ({filteredStored.length})</h2>
@@ -77,7 +72,7 @@ export const PokemonTab: React.FC<PokemonTabProps> = ({ save, onUpdate, language
                                 </tr>
                             </thead>
                             <tbody>
-                                {paginatedPokemon.map(({ pkm, index }) => {
+                                {filteredStored.map(({ pkm, index }) => {
                                     // Check if active in Main
                                     let status = "";
                                     if (save.activePokemon) {
@@ -106,7 +101,7 @@ export const PokemonTab: React.FC<PokemonTabProps> = ({ save, onUpdate, language
                                             <td style={{ fontSize: '0.8em', color: '#88ff88' }}>{status}</td>
                                             <td>
                                                 <button
-                                                    style={{ padding: '2px 5px', fontSize: '0.8em' }}
+                                                    style={{ padding: '2px 8px', fontSize: '0.8em', width: '100%' }}
                                                     onClick={() => setSelectedStored(pkm)}
                                                 >
                                                     Edit
@@ -118,11 +113,7 @@ export const PokemonTab: React.FC<PokemonTabProps> = ({ save, onUpdate, language
                             </tbody>
                         </table>
                     </div>
-                    <div style={{ marginTop: '1em', display: 'flex', justifyContent: 'center', gap: '0.5em' }}>
-                        <button disabled={page === 0} onClick={() => setPage(p => p - 1)}>&lt;</button>
-                        <span>Page {page + 1} / {totalPages}</span>
-                        <button disabled={page >= totalPages - 1} onClick={() => setPage(p => p + 1)}>&gt;</button>
-                    </div>
+
                 </>
             );
         } else {
@@ -170,7 +161,7 @@ export const PokemonTab: React.FC<PokemonTabProps> = ({ save, onUpdate, language
                                         )}
                                         <td>
                                             <button
-                                                style={{ padding: '2px 5px', fontSize: '0.8em' }}
+                                                style={{ padding: '2px 8px', fontSize: '0.8em', width: '100%' }}
                                                 onClick={() => setSelectedActive(pkm)}
                                             >
                                                 Edit
@@ -187,20 +178,20 @@ export const PokemonTab: React.FC<PokemonTabProps> = ({ save, onUpdate, language
     };
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1em' }}>
-            <div className="card" style={{ height: '240px', maxHeight: '24vh', display: 'flex', flexDirection: 'column', minWidth: '0', overflow: 'hidden' }}>
-                <div style={{ display: 'flex', gap: '5px', marginBottom: '10px', flexWrap: 'wrap' }}>
-                    <button disabled={mode === 'recruited'} onClick={() => handleModeChange('recruited')}>Recruited</button>
-                    <button disabled={mode === 'active'} onClick={() => handleModeChange('active')}>Active Team</button>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5em', height: 'calc(100vh - 160px)' }}>
+            <div className="card" style={{ flex: 5, minHeight: 0, display: 'flex', flexDirection: 'column', marginBottom: 0 }}>
+                <div style={{ display: 'flex', gap: '5px', marginBottom: '5px', flexWrap: 'wrap' }}>
+                    <button style={{ padding: '0.2em 0.5em', fontSize: '0.9em' }} disabled={mode === 'recruited'} onClick={() => handleModeChange('recruited')}>Recruited</button>
+                    <button style={{ padding: '0.2em 0.5em', fontSize: '0.9em' }} disabled={mode === 'active'} onClick={() => handleModeChange('active')}>Active Team</button>
                     {isSky && (
-                        <button disabled={mode === 'special'} onClick={() => handleModeChange('special')}>Special Episode</button>
+                        <button style={{ padding: '0.2em 0.5em', fontSize: '0.9em' }} disabled={mode === 'special'} onClick={() => handleModeChange('special')}>Special</button>
                     )}
                 </div>
                 {renderList()}
             </div>
 
-            <div className="card" style={{ height: '360px', maxHeight: '36vh', overflowY: 'auto' }}>
-                <h2>Edit Pokemon</h2>
+            <div className="card" style={{ flex: 5, minHeight: 0, overflowY: 'auto', marginBottom: 0 }}>
+                <h2 style={{ fontSize: '1.2rem', marginBottom: '0.5em' }}>Edit Pokemon</h2>
 
                 {mode === 'recruited' && selectedStored && (
                     <GenericPokemonEditor
@@ -239,7 +230,7 @@ interface GenericPokemonEditorProps {
     mode: 'recruited' | 'active' | 'special';
 }
 
-const isTimeDarkness = (save: SaveFile) => save.gameType === 'TimeDarkness';
+
 
 const GenericPokemonEditor: React.FC<GenericPokemonEditorProps> = ({ pokemon, save, onUpdate, isSky, autoSync, mode }) => {
 
@@ -286,96 +277,115 @@ const GenericPokemonEditor: React.FC<GenericPokemonEditorProps> = ({ pokemon, sa
         <div>
 
             <>
-                <div className="form-group">
-                    <label>Nickname</label>
-                    <input
-                        type="text"
-                        maxLength={10}
-                        value={pokemon.nickname}
-                        onChange={(e) => {
-                            pokemon.nickname = e.target.value;
-                            handleUpdate();
-                        }}
-                    />
+                {/* Row 1: Nickname + Species */}
+                <div className="form-group-inline">
+                    <div className="form-group" style={{ flex: 1 }}>
+                        <label>Nickname</label>
+                        <input
+                            type="text"
+                            maxLength={10}
+                            value={pokemon.nickname}
+                            onChange={(e) => {
+                                pokemon.nickname = e.target.value;
+                                handleUpdate();
+                            }}
+                        />
+                    </div>
+                    <div className="form-group" style={{ flex: 1 }}>
+                        <label>Species</label>
+                        <PokemonSelect
+                            value={pokemon.speciesId}
+                            onChange={(val) => {
+                                pokemon.speciesId = val;
+                                handleUpdate();
+                            }}
+                        />
+                    </div>
                 </div>
 
-                <div className="form-group">
-                    <label>Species</label>
-                    <PokemonSelect
-                        value={pokemon.speciesId}
-                        onChange={(val) => {
-                            pokemon.speciesId = val;
-                            handleUpdate();
-                        }}
-                    />
-                </div>
-
-                {pokemon.isFemale !== undefined && (
-                    <div className="form-group">
-                        <label>
-                            <input
-                                type="checkbox"
-                                checked={pokemon.isFemale}
-                                onChange={(e) => {
+                {/* Row 2: Gender + Level + Exp + IQ */}
+                <div className="form-group-inline">
+                    {pokemon.isFemale !== undefined && (
+                        <div className="form-group" style={{ flex: '0 0 auto' }}>
+                            <label>&nbsp;</label>
+                            <button
+                                type="button"
+                                onClick={() => {
                                     if (pokemon.isFemale !== undefined) {
-                                        pokemon.isFemale = e.target.checked;
+                                        pokemon.isFemale = !pokemon.isFemale;
                                         handleUpdate();
                                     }
                                 }}
-                            />
-                            Is Female
-                        </label>
+                                style={{
+                                    fontSize: '1.2em',
+                                    padding: '0.3em 0.6em',
+                                    background: pokemon.isFemale ? '#e91e8e' : '#3b82f6',
+                                    minWidth: '36px',
+                                }}
+                                title={pokemon.isFemale ? 'Female' : 'Male'}
+                            >
+                                {pokemon.isFemale ? '♀' : '♂'}
+                            </button>
+                        </div>
+                    )}
+                    <div className="form-group" style={{ flex: 1 }}>
+                        <label>Level</label>
+                        <input
+                            type="number"
+                            min={1}
+                            max={100}
+                            value={pokemon.level}
+                            onChange={(e) => {
+                                pokemon.level = parseInt(e.target.value) || 1;
+                                handleUpdate();
+                            }}
+                        />
                     </div>
-                )}
-
-                <div className="form-group">
-                    <label>Level</label>
-                    <input
-                        type="number"
-                        min={1}
-                        max={100}
-                        value={pokemon.level}
-                        onChange={(e) => {
-                            pokemon.level = parseInt(e.target.value) || 1;
-                            handleUpdate();
-                        }}
-                    />
+                    <div className="form-group" style={{ flex: 1 }}>
+                        <label>Experience</label>
+                        <input
+                            type="number"
+                            value={pokemon.exp}
+                            onChange={(e) => {
+                                pokemon.exp = parseInt(e.target.value) || 0;
+                                handleUpdate();
+                            }}
+                        />
+                    </div>
+                    <div className="form-group" style={{ flex: 1 }}>
+                        <label>IQ</label>
+                        <input
+                            type="number"
+                            value={pokemon.iq}
+                            onChange={(e) => {
+                                pokemon.iq = parseInt(e.target.value) || 0;
+                                handleUpdate();
+                            }}
+                        />
+                    </div>
                 </div>
 
-                <div className="form-group">
-                    <label>Experience</label>
-                    <input
-                        type="number"
-                        value={pokemon.exp}
-                        onChange={(e) => {
-                            pokemon.exp = parseInt(e.target.value) || 0;
-                            handleUpdate();
-                        }}
-                    />
-                </div>
-
-                <div className="form-group">
-                    <label>HP</label>
-                    <input
-                        type="number"
-                        style={{ width: '60px' }}
-                        value={pokemon.hp}
-                        onChange={(e) => {
-                            const val = parseInt(e.target.value) || 0;
-                            pokemon.hp = val;
-                            if (pokemon.maxHP !== undefined) {
-                                pokemon.maxHP = val;
-                            }
-                            handleUpdate();
-                        }}
-                    />
-                </div>
-                <div style={{ display: 'flex', gap: '1em', flexWrap: 'wrap' }}>
-                    <div className="form-group">
+                {/* Row 3: HP + Atk + Def + Sp.Atk + Sp.Def */}
+                <div className="form-group-inline">
+                    <div className="form-group" style={{ flex: 1 }}>
+                        <label>HP</label>
+                        <input
+                            type="number"
+                            value={pokemon.hp}
+                            onChange={(e) => {
+                                const val = parseInt(e.target.value) || 0;
+                                pokemon.hp = val;
+                                if (pokemon.maxHP !== undefined) {
+                                    pokemon.maxHP = val;
+                                }
+                                handleUpdate();
+                            }}
+                        />
+                    </div>
+                    <div className="form-group" style={{ flex: 1 }}>
                         <label>Atk</label>
                         <input
                             type="number"
-                            style={{ width: '50px' }}
                             value={pokemon.attack}
                             onChange={(e) => {
                                 pokemon.attack = parseInt(e.target.value) || 0;
@@ -383,11 +393,10 @@ const GenericPokemonEditor: React.FC<GenericPokemonEditorProps> = ({ pokemon, sa
                             }}
                         />
                     </div>
-                    <div className="form-group">
+                    <div className="form-group" style={{ flex: 1 }}>
                         <label>Def</label>
                         <input
                             type="number"
-                            style={{ width: '50px' }}
                             value={pokemon.defense}
                             onChange={(e) => {
                                 pokemon.defense = parseInt(e.target.value) || 0;
@@ -395,11 +404,10 @@ const GenericPokemonEditor: React.FC<GenericPokemonEditorProps> = ({ pokemon, sa
                             }}
                         />
                     </div>
-                    <div className="form-group">
+                    <div className="form-group" style={{ flex: 1 }}>
                         <label>Sp.Atk</label>
                         <input
                             type="number"
-                            style={{ width: '50px' }}
                             value={pokemon.spAttack}
                             onChange={(e) => {
                                 pokemon.spAttack = parseInt(e.target.value) || 0;
@@ -407,11 +415,10 @@ const GenericPokemonEditor: React.FC<GenericPokemonEditorProps> = ({ pokemon, sa
                             }}
                         />
                     </div>
-                    <div className="form-group">
+                    <div className="form-group" style={{ flex: 1 }}>
                         <label>Sp.Def</label>
                         <input
                             type="number"
-                            style={{ width: '50px' }}
                             value={pokemon.spDefense}
                             onChange={(e) => {
                                 pokemon.spDefense = parseInt(e.target.value) || 0;
@@ -421,70 +428,44 @@ const GenericPokemonEditor: React.FC<GenericPokemonEditorProps> = ({ pokemon, sa
                     </div>
                 </div>
 
-                <div className="form-group">
-                    <label>IQ</label>
-                    <input
-                        type="number"
-                        value={pokemon.iq}
-                        onChange={(e) => {
-                            pokemon.iq = parseInt(e.target.value) || 0;
-                            handleUpdate();
-                        }}
-                    />
-                </div>
 
-                {pokemon.metAt !== undefined && !isTimeDarkness(save) && (
-                    <div className="form-group">
-                        <label>Met At</label>
-                        <input
-                            type="number"
-                            value={pokemon.metAt}
-                            onChange={(e) => {
-                                pokemon.metAt = parseInt(e.target.value) || 0;
-                                handleUpdate();
-                            }}
-                        />
-                    </div>
-                )}
 
                 <h3>Moves</h3>
                 <div className="responsive-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1em' }}>
                     {pokemon.moves.map((move, idx) => (
-                        <div key={idx} className="form-group">
-                            <label>Move {idx + 1}</label>
-                            <div style={{ display: 'flex', gap: '0.5em' }}>
-                                <div style={{ flex: 3 }}>
-                                    <MoveSelect
-                                        value={move.id}
-                                        onChange={(val) => {
-                                            move.id = val;
-                                            handleUpdate();
-                                        }}
-                                    />
-                                </div>
-                                <div style={{ flex: 1 }}>
-                                    <label style={{ fontSize: '0.8em' }}>Ginseng</label>
-                                    <input
-                                        type="number"
-                                        min={0}
-                                        max={99}
-                                        value={move.powerBoost || 0}
-                                        onChange={(e) => {
-                                            move.powerBoost = parseInt(e.target.value) || 0;
-                                            handleUpdate();
-                                        }}
-                                        style={{ width: '100%' }}
-                                        placeholder="+0"
-                                    />
-                                </div>
+                        <div key={idx} className="form-group-inline">
+                            <div className="form-group" style={{ flex: 3 }}>
+                                <label>Move {idx + 1}</label>
+                                <MoveSelect
+                                    value={move.id}
+                                    onChange={(val) => {
+                                        move.id = val;
+                                        handleUpdate();
+                                    }}
+                                />
+                            </div>
+                            <div className="form-group" style={{ flex: '0 0 auto' }}>
+                                <label>Ginseng</label>
+                                <input
+                                    type="number"
+                                    min={0}
+                                    max={99}
+                                    value={move.powerBoost || 0}
+                                    onChange={(e) => {
+                                        move.powerBoost = parseInt(e.target.value) || 0;
+                                        handleUpdate();
+                                    }}
+                                    style={{ width: '50px' }}
+                                    placeholder="+0"
+                                />
                             </div>
                             {move.pp !== undefined && (
-                                <div>PP: {move.pp}</div>
+                                <div style={{ flexBasis: '100%' }}>PP: {move.pp}</div>
                             )}
                         </div>
                     ))}
                 </div>
             </>
-        </div>
+        </div >
     );
 };
