@@ -52,7 +52,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({ onFileLoaded, currentLan
     return (
         <div className="card">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1em' }}>
-                <h2 style={{ margin: 0, border: 'none', padding: 0 }}>{t('Load Save File') || 'Load Save File'}</h2>
+                <h2 style={{ margin: 0, border: 'none', padding: 0 }}>{t('LoadSaveFile')}</h2>
                 <LanguageSelector currentLanguage={currentLanguage} onLanguageChange={onLanguageChange} />
             </div>
             <div

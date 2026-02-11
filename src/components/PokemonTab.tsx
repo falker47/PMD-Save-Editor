@@ -63,12 +63,12 @@ export const PokemonTab: React.FC<PokemonTabProps> = ({ save, onUpdate, language
                         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                             <thead>
                                 <tr style={{ textAlign: 'left', borderBottom: '1px solid #555' }}>
-                                    <th>ID</th>
-                                    <th>Name</th>
-                                    <th>Lvl</th>
-                                    <th>Species</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
+                                    <th>{t('ID')}</th>
+                                    <th>{t('Name')}</th>
+                                    <th>{t('Lvl')}</th>
+                                    <th>{t('Species')}</th>
+                                    <th>{t('Status')}</th>
+                                    <th>{t('Action')}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -84,7 +84,7 @@ export const PokemonTab: React.FC<PokemonTabProps> = ({ save, onUpdate, language
                                             const activePkm = p as any;
                                             return activePkm.rosterNumber === index;
                                         });
-                                        if (isMainActive) status = "Active";
+                                        if (isMainActive) status = t('Active');
                                     }
 
                                     return (
@@ -104,7 +104,7 @@ export const PokemonTab: React.FC<PokemonTabProps> = ({ save, onUpdate, language
                                                     style={{ padding: '2px 8px', fontSize: '0.8em', width: '100%' }}
                                                     onClick={() => setSelectedStored(pkm)}
                                                 >
-                                                    Edit
+                                                    {t('EditButton')}
                                                 </button>
                                             </td>
                                         </tr>
@@ -122,11 +122,11 @@ export const PokemonTab: React.FC<PokemonTabProps> = ({ save, onUpdate, language
             const list = mode === 'active' ? (save.activePokemon || []) : (skySave ? skySave.spEpisodeActivePokemon : []);
 
             if (mode === 'active' && isRB) {
-                return <div className="card">Rescue Team uses the recruited list for active party members. Check the Recruited tab.</div>;
+                return <div className="card">{t('RTActiveHint')}</div>;
             }
 
             if (mode === 'active' && !save.activePokemon) {
-                return <div>No active pokemon data available for this save type.</div>;
+                return <div>{t('NoActiveData')}</div>;
             }
 
             return (
@@ -137,11 +137,11 @@ export const PokemonTab: React.FC<PokemonTabProps> = ({ save, onUpdate, language
                             <thead>
                                 <tr style={{ textAlign: 'left', borderBottom: '1px solid #555' }}>
                                     <th>#</th>
-                                    <th>Name</th>
-                                    <th>Lvl</th>
-                                    <th>Species</th>
-                                    {mode === 'special' && <th>Roster ID</th>}
-                                    <th>Action</th>
+                                    <th>{t('Name')}</th>
+                                    <th>{t('Lvl')}</th>
+                                    <th>{t('Species')}</th>
+                                    {mode === 'special' && <th>{t('RosterID')}</th>}
+                                    <th>{t('Action')}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -181,10 +181,10 @@ export const PokemonTab: React.FC<PokemonTabProps> = ({ save, onUpdate, language
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5em', height: 'calc(100vh - 160px)' }}>
             <div className="card" style={{ flex: 4, minHeight: 0, display: 'flex', flexDirection: 'column', marginBottom: 0 }}>
                 <div style={{ display: 'flex', gap: '5px', marginBottom: '5px', flexWrap: 'wrap' }}>
-                    <button style={{ padding: '0.2em 0.5em', fontSize: '0.9em' }} disabled={mode === 'recruited'} onClick={() => handleModeChange('recruited')}>Recruited</button>
-                    <button style={{ padding: '0.2em 0.5em', fontSize: '0.9em' }} disabled={mode === 'active'} onClick={() => handleModeChange('active')}>Active Team</button>
+                    <button style={{ padding: '0.2em 0.5em', fontSize: '0.9em' }} disabled={mode === 'recruited'} onClick={() => handleModeChange('recruited')}>{t('Recruited')}</button>
+                    <button style={{ padding: '0.2em 0.5em', fontSize: '0.9em' }} disabled={mode === 'active'} onClick={() => handleModeChange('active')}>{t('ActiveTeam')}</button>
                     {isSky && (
-                        <button style={{ padding: '0.2em 0.5em', fontSize: '0.9em' }} disabled={mode === 'special'} onClick={() => handleModeChange('special')}>Special</button>
+                        <button style={{ padding: '0.2em 0.5em', fontSize: '0.9em' }} disabled={mode === 'special'} onClick={() => handleModeChange('special')}>{t('Special')}</button>
                     )}
                 </div>
                 {renderList()}
@@ -201,6 +201,7 @@ export const PokemonTab: React.FC<PokemonTabProps> = ({ save, onUpdate, language
                         isSky={isSky}
                         autoSync={autoSync}
                         mode="recruited"
+                        language={language}
                     />
                 )}
                 {(mode === 'active' || mode === 'special') && selectedActive && (
@@ -211,10 +212,11 @@ export const PokemonTab: React.FC<PokemonTabProps> = ({ save, onUpdate, language
                         isSky={isSky}
                         autoSync={autoSync}
                         mode={mode}
+                        language={language}
                     />
                 )}
                 {((mode === 'recruited' && !selectedStored) || ((mode !== 'recruited') && !selectedActive)) && (
-                    <p>Select a Pokemon to edit.</p>
+                    <p>{t('SelectPokemonHint')}</p>
                 )}
             </div>
         </div>
@@ -228,11 +230,13 @@ interface GenericPokemonEditorProps {
     isSky: boolean;
     autoSync: boolean;
     mode: 'recruited' | 'active' | 'special';
+    language: string;
 }
 
 
 
-const GenericPokemonEditor: React.FC<GenericPokemonEditorProps> = ({ pokemon, save, onUpdate, isSky, autoSync, mode }) => {
+const GenericPokemonEditor: React.FC<GenericPokemonEditorProps> = ({ pokemon, save, onUpdate, isSky, autoSync, mode, language }) => {
+    const { t } = useTranslation(language);
 
     const handleUpdate = () => {
         // Automatically make pokemon valid if edited
@@ -280,7 +284,7 @@ const GenericPokemonEditor: React.FC<GenericPokemonEditorProps> = ({ pokemon, sa
                 {/* Row 1: Nickname + Species */}
                 <div className="form-group-inline">
                     <div className="form-group" style={{ flex: 1 }}>
-                        <label>Nickname</label>
+                        <label>{t('Nickname')}</label>
                         <input
                             type="text"
                             maxLength={10}
@@ -292,7 +296,7 @@ const GenericPokemonEditor: React.FC<GenericPokemonEditorProps> = ({ pokemon, sa
                         />
                     </div>
                     <div className="form-group" style={{ flex: 1 }}>
-                        <label>Species</label>
+                        <label>{t('Species')}</label>
                         <PokemonSelect
                             value={pokemon.speciesId}
                             onChange={(val) => {
@@ -322,14 +326,14 @@ const GenericPokemonEditor: React.FC<GenericPokemonEditorProps> = ({ pokemon, sa
                                     background: pokemon.isFemale ? '#e91e8e' : '#3b82f6',
                                     minWidth: '36px',
                                 }}
-                                title={pokemon.isFemale ? 'Female' : 'Male'}
+                                title={pokemon.isFemale ? t('Female') : t('Male')}
                             >
                                 {pokemon.isFemale ? '♀' : '♂'}
                             </button>
                         </div>
                     )}
                     <div className="form-group" style={{ flex: 1 }}>
-                        <label>Level</label>
+                        <label>{t('Level')}</label>
                         <input
                             type="number"
                             min={1}
@@ -342,7 +346,7 @@ const GenericPokemonEditor: React.FC<GenericPokemonEditorProps> = ({ pokemon, sa
                         />
                     </div>
                     <div className="form-group" style={{ flex: 1 }}>
-                        <label>Experience</label>
+                        <label>{t('Experience')}</label>
                         <input
                             type="number"
                             value={pokemon.exp}
@@ -353,7 +357,7 @@ const GenericPokemonEditor: React.FC<GenericPokemonEditorProps> = ({ pokemon, sa
                         />
                     </div>
                     <div className="form-group" style={{ flex: 1 }}>
-                        <label>IQ</label>
+                        <label>{t('IQ')}</label>
                         <input
                             type="number"
                             value={pokemon.iq}
@@ -368,7 +372,7 @@ const GenericPokemonEditor: React.FC<GenericPokemonEditorProps> = ({ pokemon, sa
                 {/* Row 3: HP + Atk + Def + Sp.Atk + Sp.Def */}
                 <div className="form-group-inline">
                     <div className="form-group" style={{ flex: 1 }}>
-                        <label>HP</label>
+                        <label>{t('HP')}</label>
                         <input
                             type="number"
                             value={pokemon.hp}
@@ -383,7 +387,7 @@ const GenericPokemonEditor: React.FC<GenericPokemonEditorProps> = ({ pokemon, sa
                         />
                     </div>
                     <div className="form-group" style={{ flex: 1 }}>
-                        <label>Atk</label>
+                        <label>{t('Atk')}</label>
                         <input
                             type="number"
                             value={pokemon.attack}
@@ -394,7 +398,7 @@ const GenericPokemonEditor: React.FC<GenericPokemonEditorProps> = ({ pokemon, sa
                         />
                     </div>
                     <div className="form-group" style={{ flex: 1 }}>
-                        <label>Def</label>
+                        <label>{t('Def')}</label>
                         <input
                             type="number"
                             value={pokemon.defense}
@@ -405,7 +409,7 @@ const GenericPokemonEditor: React.FC<GenericPokemonEditorProps> = ({ pokemon, sa
                         />
                     </div>
                     <div className="form-group" style={{ flex: 1 }}>
-                        <label>Sp.Atk</label>
+                        <label>{t('SpAttack')}</label>
                         <input
                             type="number"
                             value={pokemon.spAttack}
@@ -416,7 +420,7 @@ const GenericPokemonEditor: React.FC<GenericPokemonEditorProps> = ({ pokemon, sa
                         />
                     </div>
                     <div className="form-group" style={{ flex: 1 }}>
-                        <label>Sp.Def</label>
+                        <label>{t('SpDefense')}</label>
                         <input
                             type="number"
                             value={pokemon.spDefense}
@@ -430,12 +434,12 @@ const GenericPokemonEditor: React.FC<GenericPokemonEditorProps> = ({ pokemon, sa
 
 
 
-                <h3>Moves</h3>
+                <h3>{t('Moves')}</h3>
                 <div className="responsive-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1em' }}>
                     {pokemon.moves.map((move, idx) => (
                         <div key={idx} className="form-group-inline">
                             <div className="form-group" style={{ flex: 3 }}>
-                                <label>Move {idx + 1}</label>
+                                <label>{t('Move')} {idx + 1}</label>
                                 <MoveSelect
                                     value={move.id}
                                     onChange={(val) => {
@@ -445,7 +449,7 @@ const GenericPokemonEditor: React.FC<GenericPokemonEditorProps> = ({ pokemon, sa
                                 />
                             </div>
                             <div className="form-group" style={{ flex: '0 0 auto' }}>
-                                <label>Ginseng</label>
+                                <label>{t('Ginseng')}</label>
                                 <input
                                     type="number"
                                     min={0}
@@ -460,7 +464,7 @@ const GenericPokemonEditor: React.FC<GenericPokemonEditorProps> = ({ pokemon, sa
                                 />
                             </div>
                             {move.pp !== undefined && (
-                                <div style={{ flexBasis: '100%' }}>PP: {move.pp}</div>
+                                <div style={{ flexBasis: '100%' }}>{t('PP')}: {move.pp}</div>
                             )}
                         </div>
                     ))}

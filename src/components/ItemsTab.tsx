@@ -40,7 +40,7 @@ export const ItemsTab: React.FC<ItemsTabProps> = ({ save, onUpdate, language }) 
                 <button style={{ padding: '0.2em 0.5em', fontSize: '0.9em' }} disabled={view === 'storage'} onClick={() => setView('storage')}>{t('StoredItems')}</button>
                 {isSky && (
                     <>
-                        <button style={{ padding: '0.2em 0.5em', fontSize: '0.9em' }} disabled={view === 'spEpisode'} onClick={() => setView('spEpisode')}>Special Episode</button>
+                        <button style={{ padding: '0.2em 0.5em', fontSize: '0.9em' }} disabled={view === 'spEpisode'} onClick={() => setView('spEpisode')}>{t('SpecialEpisode')}</button>
                         {/* <button style={{ padding: '0.2em 0.5em', fontSize: '0.9em' }} disabled={view === 'friendRescue'} onClick={() => setView('friendRescue')}>Friend Rescue</button> */}
                     </>
                 )}
@@ -50,8 +50,8 @@ export const ItemsTab: React.FC<ItemsTabProps> = ({ save, onUpdate, language }) 
                 <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                     <thead>
                         <tr style={{ textAlign: 'left', borderBottom: '1px solid #555' }}>
-                            <th>Slot</th>
-                            <th>Item</th>
+                            <th>{t('Slot')}</th>
+                            <th>{t('Item')}</th>
 
                         </tr>
                     </thead>

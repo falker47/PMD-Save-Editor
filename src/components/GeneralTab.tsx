@@ -95,7 +95,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ save, onUpdate, language
 
                 {(save.gameType === 'RescueTeam') && (
                     <div className="form-group">
-                        <label>Region (Auto-detection failed? Try switching)</label>
+                        <label>{t('RegionLabel')}</label>
                         <select
                             value={(save as RBSave).offsets instanceof RBEUOffsets ? 'EU' : 'US'}
                             onChange={(e) => {
@@ -111,7 +111,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ save, onUpdate, language
 
                 {(save.baseType !== undefined) && (
                     <div className="form-group">
-                        <label>{t('BaseCampTheme') || 'Base Camp Theme'}</label>
+                        <label>{t('BaseCampTheme')}</label>
                         <input
                             type="number"
                             value={save.baseType}
@@ -173,7 +173,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ save, onUpdate, language
                         </div>
 
                         <div className="form-group">
-                            <label>Original Player Name</label>
+                            <label>{t('OriginalPlayerName')}</label>
                             <input
                                 type="text"
                                 maxLength={10}
@@ -186,7 +186,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ save, onUpdate, language
                         </div>
 
                         <div className="form-group">
-                            <label>Original Partner Name</label>
+                            <label>{t('OriginalPartnerName')}</label>
                             <input
                                 type="text"
                                 maxLength={10}
@@ -199,7 +199,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ save, onUpdate, language
                         </div>
 
                         <div className="form-group">
-                            <label>Window Frame Type</label>
+                            <label>{t('WindowFrameType')}</label>
                             <input
                                 type="number"
                                 value={skySave.windowFrameType}
@@ -221,14 +221,14 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ save, onUpdate, language
                 {/* Debug Section for Rescue Team */}
                 {save.gameType === 'RescueTeam' && (
                     <div className="card" style={{ marginTop: '20px', border: '1px solid #555' }}>
-                        <h3>Debug Tools (Rescue Team)</h3>
-                        <p>Use this if Auto-Region failed.</p>
+                        <h3>{t('DebugToolsRT')}</h3>
+                        <p>{t('DebugToolsHint')}</p>
                         <div className="form-group">
-                            <label>Scan for Team Name in File</label>
+                            <label>{t('ScanTeamName')}</label>
                             <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
                                 <input
                                     type="text"
-                                    placeholder="Enter CURRENT Team Name"
+                                    placeholder={t('ScanNamePlaceholder')}
                                     id="scanNameInput"
                                     style={{ flex: '1 1 auto' }}
                                 />
@@ -238,12 +238,12 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ save, onUpdate, language
                                         const offsets = (save as RBSave).scanForName(name);
                                         alert(`Found name "${name}" at byte offsets:\n${offsets.map(o => `0x${o.toString(16)}`).join(', ')}\n\nExpected US: 0x4EC8\nExpected EU: 0x4ECC`);
                                     }
-                                }}>Scan</button>
+                                }}>{t('ScanButton')}</button>
                             </div>
                         </div>
 
                         <div className="form-group" style={{ marginTop: '10px', borderTop: '1px solid #444', paddingTop: '10px' }}>
-                            <label>Scan for Held Items Sequence</label>
+                            <label>{t('ScanItemSequence')}</label>
                             <p style={{ fontSize: '0.8em', color: '#aaa' }}>
                                 Enter IDs of items you see in game, separated by commas.<br />
                                 Example from your screenshot: <b>70, 5, 73, 3, 73</b> (Oran, Cacnea, Reviver, Silver, Reviver)
@@ -268,7 +268,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ save, onUpdate, language
                                         if (results.length === 0) alert("No matches found.");
                                         else alert(`Matches:\n${results.join('\n')}`);
                                     }
-                                }}>Scan Items (Bit-Level)</button>
+                                }}>{t('ScanItemsButton')}</button>
                             </div>
                         </div>
                     </div>
