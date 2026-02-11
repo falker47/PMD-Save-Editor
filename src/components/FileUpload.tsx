@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 
 import { LanguageSelector } from './LanguageSelector';
+import { useTranslation } from '../hooks/useTranslation';
 
 interface FileUploadProps {
     onFileLoaded: (data: Uint8Array, fileName: string) => void;
@@ -9,6 +10,7 @@ interface FileUploadProps {
 }
 
 export const FileUpload: React.FC<FileUploadProps> = ({ onFileLoaded, currentLanguage, onLanguageChange }) => {
+    const { t } = useTranslation(currentLanguage);
     const fileInput = useRef<HTMLInputElement>(null);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,7 +52,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({ onFileLoaded, currentLan
     return (
         <div className="card">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1em' }}>
-                <h2 style={{ margin: 0, border: 'none', padding: 0 }}>Load Save File</h2>
+                <h2 style={{ margin: 0, border: 'none', padding: 0 }}>{t('Load Save File') || 'Load Save File'}</h2>
                 <LanguageSelector currentLanguage={currentLanguage} onLanguageChange={onLanguageChange} />
             </div>
             <div
@@ -66,7 +68,52 @@ export const FileUpload: React.FC<FileUploadProps> = ({ onFileLoaded, currentLan
                     accept=".sav"
                     onChange={handleFileChange}
                 />
-                <p>Click or Drag & Drop to upload .sav file</p>
+                <div style={{ textAlign: 'center', pointerEvents: 'none' }}>
+                    <svg
+                        width="64"
+                        height="64"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        style={{ marginBottom: '1rem', opacity: 0.7 }}
+                    >
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="17 8 12 3 7 8" />
+                        <line x1="12" y1="3" x2="12" y2="15" />
+                    </svg>
+                    <p style={{ fontSize: '1.2em', margin: '0 0 1rem 0' }}>{t('DragDropInstruction')}</p>
+                    <p style={{ fontSize: '0.9em', opacity: 0.8, marginBottom: '2rem' }}>
+                        {t('SupportedFormats')}
+                    </p>
+                </div>
+                <div style={{ marginTop: '2rem', textAlign: 'left', maxWidth: '600px', margin: '2rem auto 0' }}>
+                    <h3 style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '0.5rem' }}>
+                        {t('FeaturesTitle')}
+                    </h3>
+                    <ul style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem', padding: 0, listStyle: 'none' }}>
+                        {['Feature1', 'Feature2', 'Feature3'].map((feature) => (
+                            <li key={feature} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                <span style={{ color: '#4CAF50' }}>✓</span> {t(feature)}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+
+                <div style={{
+                    marginTop: '2rem',
+                    padding: '1rem',
+                    backgroundColor: 'rgba(255, 193, 7, 0.1)',
+                    border: '1px solid rgba(255, 193, 7, 0.3)',
+                    borderRadius: '8px',
+                    color: '#ffc107',
+                    fontWeight: 'bold',
+                    textAlign: 'center'
+                }}>
+                    {t('BackupWarning')}
+                </div>
             </div>
         </div>
     );

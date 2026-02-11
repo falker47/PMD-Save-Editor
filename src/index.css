@@ -211,3 +211,13 @@ button:hover {
     /* Ensure it has a bit of padding to not cut off scrollbars visually if needed */
     padding-right: 5px;
 }
+
+.footer-link {
+    transition: color 0.3s ease;
+    text-decoration: none;
+    color: whitesmoke;
+}
+
+.footer-link:hover {
+    color: #FFDE00 !important;
+}

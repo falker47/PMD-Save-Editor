@@ -10,6 +10,19 @@ import { PokemonTab } from './PokemonTab';
 import { DataManager } from '../utils/DataManager';
 import { useTranslation } from '../hooks/useTranslation';
 
+const Footer = () => (
+    <footer style={{ marginTop: '3rem', textAlign: 'center', padding: '1rem', fontSize: '0.9rem', opacity: 0.8 }}>
+        <a
+            href="https://falker47.github.io/Nexus-portfolio/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="footer-link"
+        >
+            &copy; {new Date().getFullYear()} Maurizio Falconi - falker47
+        </a>
+    </footer>
+);
+
 export const SaveEditor: React.FC = () => {
     const [saveFile, setSaveFile] = useState<SaveFile | null>(null);
     const [fileName, setFileName] = useState<string>("");
@@ -114,11 +127,21 @@ export const SaveEditor: React.FC = () => {
     };
 
     if (!saveFile) {
-        return <FileUpload onFileLoaded={handleFileLoaded} currentLanguage={language} onLanguageChange={handleLanguageChange} />;
+        return (
+            <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', justifyContent: 'center' }}>
+                <FileUpload onFileLoaded={handleFileLoaded} currentLanguage={language} onLanguageChange={handleLanguageChange} />
+                <Footer />
+            </div>
+        );
     }
 
     if (!dataLoaded) {
-        return <div className="card">Loading game data...</div>;
+        return (
+            <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', justifyContent: 'center' }}>
+                <div className="card">Loading game data...</div>
+                <Footer />
+            </div>
+        );
     }
 
     return (
@@ -175,6 +198,7 @@ export const SaveEditor: React.FC = () => {
             {activeTab === 'pokemon' && (
                 <PokemonTab save={saveFile} onUpdate={forceUpdate} language={language} />
             )}
+            <Footer />
         </div>
     );
 };
