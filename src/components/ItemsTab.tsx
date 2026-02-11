@@ -52,8 +52,7 @@ export const ItemsTab: React.FC<ItemsTabProps> = ({ save, onUpdate, language }) 
                         <tr style={{ textAlign: 'left', borderBottom: '1px solid #555' }}>
                             <th>Slot</th>
                             <th>Item</th>
-                            <th>{isStorage ? 'Quantity' : 'Quantity/Param'}</th>
-                            {!isStorage && <th>Valid</th>}
+
                         </tr>
                     </thead>
                     <tbody>
@@ -82,7 +81,7 @@ interface ItemRowProps {
     isStorage?: boolean;
 }
 
-const ItemRow: React.FC<ItemRowProps> = ({ index, item, onUpdate, isHeld, isStorage }) => {
+const ItemRow: React.FC<ItemRowProps> = ({ index, item, onUpdate, isStorage }) => {
     // Check if it's an ExplorersItem to access stackable property?
     // GenericItem doesn't have isStackableItem.
     // We can cast if we know it is Sky/TD/RB structure that supports it?
@@ -107,32 +106,7 @@ const ItemRow: React.FC<ItemRowProps> = ({ index, item, onUpdate, isHeld, isStor
                     />
                 )}
             </td>
-            <td>
-                <input
-                    type="number"
-                    value={item.parameter}
-                    onChange={(e) => {
-                        item.parameter = parseInt(e.target.value) || 0;
-                        onUpdate();
-                    }}
-                    style={{ width: '80px' }}
-                />
-                <span style={{ fontSize: '0.8em', marginLeft: '5px' }}>(Qty/Param)</span>
-            </td>
-            {isHeld && (
-                <td>
-                    <input
-                        type="checkbox"
-                        checked={item.isValid}
-                        onChange={(e) => {
-                            if (isHeld) {
-                                item.isValid = e.target.checked;
-                                onUpdate();
-                            }
-                        }}
-                    />
-                </td>
-            )}
+
         </tr>
     );
 };

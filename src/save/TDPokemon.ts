@@ -41,10 +41,12 @@ export class TDStoredPokemon implements GenericPokemon {
         if (bits) {
             // Legacy: Bit 0 prevents "SetInt" overriding it? 
             // Legacy GetStoredPokemonBits sets bit 0 to true.
-            this.isValid = true; // Always valid if loaded? Legacy: IsValid => Level > 0.
-
             this.level = bits.getInt(0, 1, 7);
             this.id = new ExplorersPokemonId(bits.getInt(0, 8, 11));
+
+            // Legacy: IsValid => Level > 0.
+            this.isValid = this.level > 0;
+
             this.metAt = bits.getInt(0, 19, 8);
             this.metFloor = bits.getInt(0, 27, 7);
             this.unk1 = bits.getBit(34);

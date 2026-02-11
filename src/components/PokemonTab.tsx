@@ -80,9 +80,16 @@ export const PokemonTab: React.FC<PokemonTabProps> = ({ save, onUpdate, language
                                 {paginatedPokemon.map(({ pkm, index }) => {
                                     // Check if active in Main
                                     let status = "";
-                                    if (skySave) {
-                                        const isMainActive = skySave.activePokemon.some(p => p.isValid && p.rosterNumber === index);
-                                        if (isMainActive) status = "Player";
+                                    if (save.activePokemon) {
+                                        // For Sky/TD/Rescue, check if rosterNumber matches index
+                                        // NOTE: GenericPokemon doesn't have rosterNumber, need to cast
+                                        const isMainActive = save.activePokemon.some(p => {
+                                            if (!p.isValid) return false;
+                                            // Handle different game types if needed, but standard is rosterNumber
+                                            const activePkm = p as any;
+                                            return activePkm.rosterNumber === index;
+                                        });
+                                        if (isMainActive) status = "Active";
                                     }
 
                                     return (
@@ -190,6 +197,7 @@ export const PokemonTab: React.FC<PokemonTabProps> = ({ save, onUpdate, language
                     )}
                 </div>
                 {renderList()}
+
             </div>
 
             <div className="card" style={{ flex: 1 }}>
@@ -237,6 +245,8 @@ interface GenericPokemonEditorProps {
     autoSync: boolean;
     mode: 'recruited' | 'active' | 'special';
 }
+
+const isTimeDarkness = (save: SaveFile) => save.gameType === 'TimeDarkness';
 
 const GenericPokemonEditor: React.FC<GenericPokemonEditorProps> = ({ pokemon, save, onUpdate, isSky, autoSync, mode }) => {
 
@@ -453,7 +463,7 @@ const GenericPokemonEditor: React.FC<GenericPokemonEditorProps> = ({ pokemon, sa
                         />
                     </div>
 
-                    {pokemon.metAt !== undefined && (
+                    {pokemon.metAt !== undefined && !isTimeDarkness(save) && (
                         <div className="form-group">
                             <label>Met At (Location ID)</label>
                             <input

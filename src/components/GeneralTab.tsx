@@ -271,7 +271,8 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ save, onUpdate, language
                 </div>
             )}
 
-            {/* Debug Section for Time/Darkness */}
+            {/* Debug Section for Time/Darkness (Commented Out) */}
+            {/*
             {save.gameType === 'TimeDarkness' && (
                 <div className="card" style={{ marginTop: '20px', border: '1px solid #555' }}>
                     <h3>Debug Tools (Time/Darkness)</h3>
@@ -318,6 +319,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ save, onUpdate, language
                     </div>
                 </div>
             )}
+            */}
 
         </div>
     );
