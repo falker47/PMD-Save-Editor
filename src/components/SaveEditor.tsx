@@ -125,10 +125,12 @@ export const SaveEditor: React.FC = () => {
         <div>
             <div className="card">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '2px solid #646cff', paddingBottom: '0.5em', marginBottom: '1em' }}>
-                    <h2 style={{ margin: 0, border: 'none', padding: 0 }}>Editing: {fileName}</h2>
+                    <h2 style={{ margin: 0, border: 'none', padding: 0, flex: 1, minWidth: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', marginRight: '1rem' }} title={`Editing: ${fileName}`}>
+                        Editing: {fileName}
+                    </h2>
                     <button
                         onClick={handleUnload}
-                        style={{ backgroundColor: '#d32f2f', color: 'white' }}
+                        style={{ backgroundColor: '#d32f2f', color: 'white', whiteSpace: 'nowrap' }}
                     >
                         Go Back
                     </button>
