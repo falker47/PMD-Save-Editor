@@ -1,10 +1,14 @@
 import React, { useRef } from 'react';
 
+import { LanguageSelector } from './LanguageSelector';
+
 interface FileUploadProps {
     onFileLoaded: (data: Uint8Array, fileName: string) => void;
+    currentLanguage: string;
+    onLanguageChange: (lang: string) => void;
 }
 
-export const FileUpload: React.FC<FileUploadProps> = ({ onFileLoaded }) => {
+export const FileUpload: React.FC<FileUploadProps> = ({ onFileLoaded, currentLanguage, onLanguageChange }) => {
     const fileInput = useRef<HTMLInputElement>(null);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,7 +49,10 @@ export const FileUpload: React.FC<FileUploadProps> = ({ onFileLoaded }) => {
 
     return (
         <div className="card">
-            <h2>Load Save File</h2>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1em' }}>
+                <h2 style={{ margin: 0, border: 'none', padding: 0 }}>Load Save File</h2>
+                <LanguageSelector currentLanguage={currentLanguage} onLanguageChange={onLanguageChange} />
+            </div>
             <div
                 className="file-upload"
                 onClick={() => fileInput.current?.click()}

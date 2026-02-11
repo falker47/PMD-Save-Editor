@@ -16,11 +16,11 @@ export const SaveEditor: React.FC = () => {
     const [activeTab, setActiveTab] = useState<string>('general');
     const [updateKey, setUpdateKey] = useState<number>(0);
     const [dataLoaded, setDataLoaded] = useState(false);
-    const [language, setLanguage] = useState('en');
+    const [language, setLanguage] = useState(localStorage.getItem('pmd-save-editor-language') || 'en');
     const { t } = useTranslation(language);
 
     useEffect(() => {
-        DataManager.getInstance().loadData().then(() => setDataLoaded(true));
+        DataManager.getInstance().setLanguage(language).then(() => setDataLoaded(true));
     }, []);
 
     const handleFileLoaded = (data: Uint8Array, name: string) => {
@@ -72,9 +72,9 @@ export const SaveEditor: React.FC = () => {
         }
     };
 
-    const handleLanguageChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const lang = e.target.value;
+    const handleLanguageChange = async (lang: string) => {
         setLanguage(lang);
+        localStorage.setItem('pmd-save-editor-language', lang);
         setDataLoaded(false);
         await DataManager.getInstance().setLanguage(lang);
         setDataLoaded(true);
@@ -114,7 +114,7 @@ export const SaveEditor: React.FC = () => {
     };
 
     if (!saveFile) {
-        return <FileUpload onFileLoaded={handleFileLoaded} />;
+        return <FileUpload onFileLoaded={handleFileLoaded} currentLanguage={language} onLanguageChange={handleLanguageChange} />;
     }
 
     if (!dataLoaded) {
@@ -157,13 +157,6 @@ export const SaveEditor: React.FC = () => {
                         </div>
                     </div>
                     <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                        <select value={language} onChange={handleLanguageChange} style={{ padding: '5px' }}>
-                            <option value="en">English</option>
-                            <option value="fr">Français</option>
-                            <option value="de">Deutsch</option>
-                            <option value="it">Italiano</option>
-                            <option value="es">Español</option>
-                        </select>
                         <button onClick={handleDownload}>Download Save</button>
                     </div>
                 </div>
