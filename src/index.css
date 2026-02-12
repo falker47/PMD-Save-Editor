@@ -159,17 +159,40 @@ button:hover {
     }
 
     #root {
-        padding: 1rem;
+        padding: 0.5rem;
         width: 100%;
         box-sizing: border-box;
     }
 
     h1 {
-        font-size: 2rem;
+        font-size: 1.8rem;
+        margin-top: 0.5rem;
     }
 
     .card {
+        padding: 0.8rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .file-upload {
         padding: 1rem;
+    }
+
+    .file-upload svg {
+        width: 48px;
+        height: 48px;
+        margin-bottom: 0.5rem !important;
+    }
+
+    .file-upload p {
+        font-size: 1rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+
+    .quiz-button {
+        padding: 0.6rem 1.2rem;
+        font-size: 1rem;
+        margin-top: 0.5rem;
     }
 
     .tabs {

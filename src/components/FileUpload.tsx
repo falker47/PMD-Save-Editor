@@ -52,7 +52,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({ onFileLoaded, currentLan
     return (
         <div className="card">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1em' }}>
-                <h2 style={{ margin: 0, border: 'none', padding: 0 }}>{t('LoadSaveFile')}</h2>
+                <h2 style={{ margin: 0, border: 'none', padding: 0, fontSize: '1.2rem' }}>{t('LoadSaveFile')}</h2>
                 <LanguageSelector currentLanguage={currentLanguage} onLanguageChange={onLanguageChange} />
             </div>
             <div
@@ -105,12 +105,19 @@ export const FileUpload: React.FC<FileUploadProps> = ({ onFileLoaded, currentLan
                     {t('ReverseQuiz')}
                 </a>
             </div>
-            <div className="card" style={{ marginTop: '1rem' }}>
+            <div className="card" style={{ marginTop: '0.5rem' }}>
                 <div style={{ textAlign: 'left', maxWidth: '600px', margin: '0 auto' }}>
-                    <h3 style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '0.5rem' }}>
+                    <h3 style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '0.35rem', marginTop: 0, fontSize: '1.1rem' }}>
                         {t('FeaturesTitle')}
                     </h3>
-                    <ul style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem', padding: 0, listStyle: 'none' }}>
+                    <ul style={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                        gap: '0.5rem',
+                        padding: 0,
+                        listStyle: 'none',
+                        fontSize: '0.9rem'
+                    }}>
                         {['Feature1', 'Feature2', 'Feature3'].map((feature) => (
                             <li key={feature} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                                 <span style={{ color: '#4CAF50' }}>✓</span> {t(feature)}
@@ -120,14 +127,15 @@ export const FileUpload: React.FC<FileUploadProps> = ({ onFileLoaded, currentLan
                 </div>
 
                 <div style={{
-                    marginTop: '2rem',
-                    padding: '1rem',
+                    marginTop: '1rem',
+                    padding: '0.8rem',
                     backgroundColor: 'rgba(255, 193, 7, 0.1)',
                     border: '1px solid rgba(255, 193, 7, 0.3)',
                     borderRadius: '8px',
                     color: '#ffc107',
                     fontWeight: 'bold',
-                    textAlign: 'center'
+                    textAlign: 'center',
+                    fontSize: '0.9rem'
                 }}>
                     {t('BackupWarning')}
                 </div>
