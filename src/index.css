@@ -226,3 +226,38 @@ button:hover {
 .footer-link:hover {
     color: #FFDE00 !important;
 }
+
+.quiz-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    color: #1a1a1a;
+    padding: 0.8rem 1.5rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    margin-top: 1rem;
+}
+
+.quiz-button:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(255, 215, 0, 0.5);
+    background: linear-gradient(135deg, #FFE44D 0%, #FFB733 100%);
+}
+
+.quiz-button:active {
+    transform: translateY(0) scale(0.98);
+}
+
+.quiz-button svg {
+    transition: transform 0.3s ease;
+}
+
+.quiz-button:hover svg {
+    transform: rotate(15deg);
+}

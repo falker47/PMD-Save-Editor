@@ -89,7 +89,24 @@ export const FileUpload: React.FC<FileUploadProps> = ({ onFileLoaded, currentLan
                         {t('SupportedFormats')}
                     </p>
                 </div>
-                <div style={{ marginTop: '2rem', textAlign: 'left', maxWidth: '600px', margin: '2rem auto 0' }}>
+            </div>
+            <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+                <a
+                    href="https://pokemonmysterydungeon-reversequiz.netlify.app/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="quiz-button"
+                >
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                        <line x1="12" y1="17" x2="12.01" y2="17" />
+                    </svg>
+                    {t('ReverseQuiz')}
+                </a>
+            </div>
+            <div className="card" style={{ marginTop: '1rem' }}>
+                <div style={{ textAlign: 'left', maxWidth: '600px', margin: '0 auto' }}>
                     <h3 style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '0.5rem' }}>
                         {t('FeaturesTitle')}
                     </h3>
