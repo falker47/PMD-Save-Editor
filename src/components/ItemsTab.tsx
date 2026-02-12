@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { SaveFile, GenericItem } from '../save/SaveFile';
 import { SkySave } from '../save/SkySave';
 import { ItemSelect } from './ItemSelect';
-import { DataManager } from '../utils/DataManager';
 
 import { useTranslation } from '../hooks/useTranslation';
 
@@ -81,32 +80,19 @@ interface ItemRowProps {
     isStorage?: boolean;
 }
 
-const ItemRow: React.FC<ItemRowProps> = ({ index, item, onUpdate, isStorage }) => {
-    // Check if it's an ExplorersItem to access stackable property?
-    // GenericItem doesn't have isStackableItem.
-    // We can cast if we know it is Sky/TD/RB structure that supports it?
-    // Or just check if parameter > 0?
-    // For now, simple implementation.
-
+const ItemRow: React.FC<ItemRowProps> = ({ index, item, onUpdate }) => {
     return (
         <tr style={{ borderBottom: '1px solid #333' }}>
             <td>{index + 1}</td>
             <td>
-                {isStorage ? (
-                    // For Rescue Team Storage, ID is fixed by index.
-                    // We just show the Name.
-                    <span>{DataManager.getInstance().getItemName(item.id)}</span>
-                ) : (
-                    <ItemSelect
-                        value={item.id}
-                        onChange={(val) => {
-                            item.id = val;
-                            onUpdate();
-                        }}
-                    />
-                )}
+                <ItemSelect
+                    value={item.id}
+                    onChange={(val) => {
+                        item.id = val;
+                        onUpdate();
+                    }}
+                />
             </td>
-
         </tr>
     );
 };
